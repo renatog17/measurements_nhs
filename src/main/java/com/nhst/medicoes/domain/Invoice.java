@@ -1,0 +1,26 @@
+package com.nhst.medicoes.domain;
+
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Table(name = "invoices")
+public class Invoice {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    private MeterProperty meterProperty;
+
+    @OneToMany(mappedBy = "invoice")
+    private List<Measurement> measurements;
+
+    private BigDecimal totalValue;
+
+    private LocalDate referenceMonth;
+}
