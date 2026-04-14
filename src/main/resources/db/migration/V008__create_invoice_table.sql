@@ -15,3 +15,7 @@ CREATE TABLE invoices (
                               FOREIGN KEY (meter_property_id)
                                   REFERENCES meter_properties(id)
 );
+
+CREATE UNIQUE INDEX uk_open_invoice
+    ON invoices (meter_property_id)
+    WHERE status = 'OPEN';

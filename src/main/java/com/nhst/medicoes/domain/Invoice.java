@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,12 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice")
     private List<Measurement> measurements;
 
-    private BigDecimal totalValue;
+    private BigDecimal totalValue = BigDecimal.ZERO;
 
     private LocalDate referenceMonth;
+
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status = InvoiceStatus.OPEN;
+
+    private LocalDateTime closedAt;
 }

@@ -5,6 +5,8 @@ CREATE TABLE measurements (
 
                               reader_id BIGINT NOT NULL,
 
+                              invoice_id BIGINT,
+
                               source VARCHAR(30) NOT NULL,
 
                               value NUMERIC(12,3) NOT NULL,
@@ -19,7 +21,11 @@ CREATE TABLE measurements (
 
                               CONSTRAINT fk_measurement_reader
                                   FOREIGN KEY (reader_id)
-                                      REFERENCES readers (id)
+                                      REFERENCES readers (id),
+
+                              CONSTRAINT fk_measurement_invoice
+                                  FOREIGN KEY (invoice_id)
+                                      REFERENCES invoices (id)
 );
 
 CREATE INDEX idx_measurements_meter_property_date
