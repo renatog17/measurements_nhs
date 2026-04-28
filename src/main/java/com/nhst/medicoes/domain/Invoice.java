@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -29,4 +30,5 @@ public class Invoice {
     private InvoiceStatus status = InvoiceStatus.OPEN;
 
     private LocalDateTime closedAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

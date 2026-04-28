@@ -42,6 +42,10 @@ public class Measurement {
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
+    @ManyToOne
+    @JoinColumn(name = "meter_id")
+    private Meter meter;
+
     @PrePersist
     void onCreate() {
         createdAt = LocalDateTime.now();

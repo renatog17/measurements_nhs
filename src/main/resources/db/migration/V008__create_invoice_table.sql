@@ -11,6 +11,8 @@ CREATE TABLE invoices (
 
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+                          closed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
                           CONSTRAINT fk_invoice_meter_property
                               FOREIGN KEY (meter_property_id)
                                   REFERENCES meter_properties(id)

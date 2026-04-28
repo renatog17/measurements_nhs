@@ -17,13 +17,13 @@ public class ClientController {
     private final ClientService service;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('OPERATOR')")
     public Client create(@RequestBody @Valid CreateClientRequest req) {
         return service.create(req);
     }
 
     @PostMapping("/assign-property")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('OPERATOR')")
     public void assign(@RequestBody AssignPropertyRequest req) {
         service.assignProperty(req.clientId(), req.propertyId());
     }

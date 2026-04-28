@@ -16,7 +16,7 @@ public class PropertyController {
     private final PropertyService propertyService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('OPERATOR')")
     public Property create(@RequestBody @Valid CreatePropertyRequest req) {
         return propertyService.create(
                 req.address(),
