@@ -9,7 +9,7 @@ public class MedicoesApplication {
 
 	public static void main(String[] args) {
 
-		System.out.println("Senha: "+new BCryptPasswordEncoder().encode("admin"));
+		//System.out.println("Senha: "+new BCryptPasswordEncoder().encode("admin"));
 		SpringApplication.run(MedicoesApplication.class, args);
 	}
 

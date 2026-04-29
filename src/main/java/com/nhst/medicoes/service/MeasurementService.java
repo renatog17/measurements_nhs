@@ -1,65 +1,47 @@
-//package com.nhst.medicoes.service;
-//
-//import com.nhst.medicoes.domain.Invoice;
-//import com.nhst.medicoes.domain.Measurement;
-//import com.nhst.medicoes.domain.dto.MeasurementInputDTO;
-//import com.nhst.medicoes.domain.enums.InvoiceStatus;
-//import com.nhst.medicoes.repository.InvoiceRepository;
-//import com.nhst.medicoes.repository.MeasurementRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class MeasurementService {
-//
-//    private final MeasurementRepository measurementRepository;
-//    private final InvoiceRepository invoiceRepository;
-//
-//    @Transactional
-//    public void processBatch(List<MeasurementInputDTO> inputs) {
-//
-//        for (MeasurementInputDTO input : inputs) {
-//
-//            // 1. Busca fatura aberta
-//            Invoice invoice = invoiceRepository
-//                    .findFirstByMeterPropertyIdAndStatusOrderByCreatedAtDesc(
-//                            input.meterPropertyId(),
-//                            InvoiceStatus.OPEN
-//                    )
-//                    .orElseGet(() -> createNewInvoice(input.meterPropertyId()));
-//
-//            // 2. Cria measurement
-//            Measurement m = new Measurement();
-//            m.setMeterPropertyId(input.meterPropertyId());
-//            m.setValue(input.value());
-//            m.setMeasuredAt(input.measuredAt());
-//            m.setInvoice(invoice);
-//
-//            measurementRepository.save(m);
-//
-//            // 3. Regra: soma valor (1 m³ = 1 real)
-//            invoice.setTotalAmount(
-//                    invoice.getTotalAmount().add(input.value())
-//            );
-//
-//            // 4. Regra: fecha se >= 15
-//            if (invoice.getTotalAmount().compareTo(BigDecimal.valueOf(15)) >= 0) {
-//                invoice.setStatus(InvoiceStatus.CLOSED);
-//                invoice.setClosedAt(LocalDateTime.now());
-//            }
-//
-//            invoiceRepository.save(invoice);
-//        }
-//    }
-//
-//    private Invoice createNewInvoice(Long meterPropertyId) {
-//        Invoice invoice = new Invoice();
-//        invoice.setMeterPropertyId(meterPropertyId);
-//        return invoiceRepository.save(invoice);
-//    }
-//}
+package com.nhst.medicoes.service;
+
+
+import com.nhst.medicoes.domain.Invoice;
+import com.nhst.medicoes.domain.Measurement;
+import com.nhst.medicoes.domain.Meter;
+import com.nhst.medicoes.domain.MeterProperty;
+import com.nhst.medicoes.domain.enums.MeasurementSource;
+import com.nhst.medicoes.repository.MeasurementRepository;
+import com.nhst.medicoes.repository.MeterPropertyRepository;
+import com.nhst.medicoes.repository.MeterRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class MeasurementService {
+
+    private final MeasurementRepository measurementRepository;
+    private final MeterService meterService;
+    private final ReaderService readerService;
+    private final InvoiceService invoiceService;
+    private final MeterPropertyRepository meterPropertyRepository;
+
+    public void createMeasurement(LocalDateTime measuredAt, Long meterId, BigDecimal value, Long readerId) {
+        Measurement measurement = new Measurement();
+        measurement.setMeasuredAt(measuredAt);
+        Meter meter = meterService.findById(meterId);
+        measurement.setMeter(meter);
+        measurement.setValue(value);
+        measurement.setReader(readerService.findById(readerId));
+
+        Invoice invoice = invoiceService.findByMeterId(meterId);
+
+        measurement.setInvoice(invoice);
+
+        MeterProperty mp = meterPropertyRepository.findByMeterId(meter.getId());
+        measurement.setMeterProperty(mp);
+        measurement.setSource(MeasurementSource.MANUAL_APP);
+        measurementRepository.save(measurement);
+    }
+}

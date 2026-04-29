@@ -8,31 +8,38 @@ import com.nhst.medicoes.repository.MeterRepository;
 import com.nhst.medicoes.repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MeterService {
 
     private final MeterRepository meterRepository;
     private final PropertyRepository propertyRepository;
     private final MeterPropertyRepository meterPropertyRepository;
+    private final InvoiceService invoiceService;
 
-    public Meter create(String serialNumber, String type) {
-
+    public Meter create(String serialNumber) {
         if (meterRepository.findBySerialNumber(serialNumber).isPresent()) {
             throw new IllegalStateException("Meter already exists");
         }
-
         return meterRepository.save(
                 Meter.builder()
                         .serialNumber(serialNumber)
-                        .type(type)
                         .build()
         );
     }
 
-    public void assignToProperty(Long meterId, Long propertyId) {
+    public Meter findById(Long id){
+        return meterRepository.findById(id).orElseThrow();
+    }
 
+
+    public void assignToProperty(Long meterId, Long propertyId) {
+        //1 fazer associação
         if (meterPropertyRepository.existsByPropertyIdAndActiveTrue(propertyId)) {
             throw new IllegalStateException("Property already has an active meter");
         }
@@ -49,5 +56,8 @@ public class MeterService {
                 .build();
 
         meterPropertyRepository.save(relation);
+
+        //criar o primeiro invoice da associação
+        invoiceService.createInvoice(relation);
     }
 }

@@ -16,13 +16,13 @@ public class MeterController {
     private final MeterService meterService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('OPERATOR')")
     public void create(@RequestBody @Valid CreateMeterRequest req) {
-        meterService.create(req.serialNumber(), req.type());
+        meterService.create(req.serialNumber());
     }
 
-    @PostMapping("/assign")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/assign-property")
+    @PreAuthorize("hasRole('OPERATOR')")
     public void assign(@RequestBody @Valid AssignMeterRequest req) {
         meterService.assignToProperty(req.meterId(), req.propertyId());
     }
