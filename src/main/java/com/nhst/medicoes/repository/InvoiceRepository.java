@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
-    Optional<Invoice> findFirstByMeterPropertyIdAndStatusOrderByCreatedAtDesc(
-            Long meterPropertyId,
+    Optional<Invoice> findFirstByMeterIdAndStatusOrderByCreatedAtDesc(
+            Long meterId,
             InvoiceStatus status
     );
 }

@@ -18,7 +18,7 @@ public class MeterController {
     @PostMapping
     @PreAuthorize("hasRole('OPERATOR')")
     public void create(@RequestBody @Valid CreateMeterRequest req) {
-        meterService.create(req.serialNumber());
+        meterService.create(req.serialNumber(), req.maxValue());
     }
 
     @PostMapping("/assign-property")

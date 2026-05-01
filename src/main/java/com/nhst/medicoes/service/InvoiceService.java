@@ -8,24 +8,22 @@ import com.nhst.medicoes.repository.InvoiceRepository;
 import com.nhst.medicoes.repository.MeterPropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
-    private final MeterPropertyRepository meterPropertyRepository;
 
-    public void createInvoice(MeterProperty meterProperty){
+    @Transactional
+    public Invoice createInvoice(Meter meter){
         Invoice invoice = new Invoice();
-        invoice.setMeterProperty(meterProperty);
-
-        invoiceRepository.save(invoice);
+        invoice.setMeter(meter);
+        invoice.setStatus(InvoiceStatus.OPEN);
+        return invoiceRepository.save(invoice);
     }
 
     public Invoice findByMeterId(Long meterId) {
-
-        MeterProperty mp = meterPropertyRepository.findByMeterId(meterId);
-
-        return invoiceRepository.findFirstByMeterPropertyIdAndStatusOrderByCreatedAtDesc(mp.getId(), InvoiceStatus.OPEN).orElseThrow();
+        return invoiceRepository.findFirstByMeterIdAndStatusOrderByCreatedAtDesc(meterId, InvoiceStatus.OPEN).orElseThrow();
     }
 }

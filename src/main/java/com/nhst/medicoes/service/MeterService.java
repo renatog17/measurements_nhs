@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -22,13 +23,15 @@ public class MeterService {
     private final MeterPropertyRepository meterPropertyRepository;
     private final InvoiceService invoiceService;
 
-    public Meter create(String serialNumber) {
+    public Meter create(String serialNumber, BigDecimal maxValue) {
         if (meterRepository.findBySerialNumber(serialNumber).isPresent()) {
             throw new IllegalStateException("Meter already exists");
         }
         return meterRepository.save(
                 Meter.builder()
                         .serialNumber(serialNumber)
+                        .maxValue(maxValue)
+                        .value(BigDecimal.ZERO)
                         .build()
         );
     }
@@ -58,6 +61,6 @@ public class MeterService {
         meterPropertyRepository.save(relation);
 
         //criar o primeiro invoice da associação
-        invoiceService.createInvoice(relation);
+        invoiceService.createInvoice(meter);
     }
 }

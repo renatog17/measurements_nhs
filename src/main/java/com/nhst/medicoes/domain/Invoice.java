@@ -23,7 +23,7 @@ public class Invoice {
     private Long id;
 
     @ManyToOne(optional = false)
-    private MeterProperty meterProperty;
+    private Meter meter;
 
     @OneToMany(mappedBy = "invoice")
     private List<Measurement> measurements;

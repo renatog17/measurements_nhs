@@ -1,7 +1,7 @@
 CREATE TABLE invoices (
                           id BIGSERIAL PRIMARY KEY,
 
-                          meter_property_id BIGINT NOT NULL,
+                          meter_id BIGINT NOT NULL,
 
                           reference_month DATE NOT NULL,
 
@@ -13,11 +13,11 @@ CREATE TABLE invoices (
 
                           closed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-                          CONSTRAINT fk_invoice_meter_property
-                              FOREIGN KEY (meter_property_id)
-                                  REFERENCES meter_properties(id)
+                          CONSTRAINT fk_invoice_meter
+                              FOREIGN KEY (meter_id)
+                                  REFERENCES meters(id)
 );
 
 CREATE UNIQUE INDEX uk_open_invoice
-    ON invoices (meter_property_id)
+    ON invoices (meter_id)
     WHERE status = 'OPEN';

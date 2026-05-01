@@ -21,9 +21,6 @@ public class Measurement {
     private Long id;
 
     @ManyToOne(optional = false)
-    private MeterProperty meterProperty;
-
-    @ManyToOne(optional = false)
     private Reader reader;
 
     @Enumerated(EnumType.STRING)
