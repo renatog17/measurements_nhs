@@ -9,7 +9,7 @@ CREATE TABLE measurements (
 
                               source VARCHAR(30) NOT NULL,
 
-                              value NUMERIC(12,3) NOT NULL,
+                              consumed_volume NUMERIC(12,3) NOT NULL,
 
                               measured_at TIMESTAMP NOT NULL,
 
@@ -34,5 +34,5 @@ CREATE INDEX idx_measurements_meter_date
 CREATE INDEX idx_measurements_reader
     ON measurements (reader_id);
 
-CREATE UNIQUE INDEX uk_measurement_unique_read
-    ON measurements (meter_id, measured_at);
+-- CREATE UNIQUE INDEX uk_measurement_unique_read
+--     ON measurements (meter_id, measured_at);

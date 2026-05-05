@@ -23,4 +23,22 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(InvalidMeasurementException.class)
+    public ResponseEntity<?> handleInvalidMeasurement(InvalidMeasurementException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(PendingMeterReadingException.class)
+    public ResponseEntity<?> handlePendingMeterReading(PendingMeterReadingException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.badRequest().body(error);
+    }
 }

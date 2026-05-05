@@ -19,12 +19,14 @@ public class MeasurementController {
     @PostMapping()
     public ResponseEntity<Void> receiveMeasurement(
             @RequestBody CreateMeasurementRequest createMeasurementRequest
-    ) {
+    ) throws Exception {
         measurementService.createMeasurement(createMeasurementRequest.measuredAt(),
                 createMeasurementRequest.meterId(),
-                createMeasurementRequest.value(),
+                createMeasurementRequest.actualVolume(),
                 createMeasurementRequest.readerId());
 
         return ResponseEntity.ok().build();
     }
+
+
 }

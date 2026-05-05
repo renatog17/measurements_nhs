@@ -5,7 +5,9 @@ CREATE TABLE invoices (
 
                           reference_month DATE NOT NULL,
 
-                          total_value NUMERIC(12,3) NOT NULL DEFAULT 0,
+                          total_consumed_volume NUMERIC(12,3) NOT NULL DEFAULT 0,
+
+                          price_per_m3 NUMERIC(10,4) NOT NULL,
 
                           status VARCHAR(20) NOT NULL DEFAULT 'OPEN',
 

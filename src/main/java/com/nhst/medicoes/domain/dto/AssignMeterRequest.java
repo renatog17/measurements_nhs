@@ -8,5 +8,8 @@ public record AssignMeterRequest(
         Long meterId,
 
         @NotNull(message = "Property id is required")
-        Long propertyId
+        Long propertyId,
+
+        @NotNull(message = "Reader id is required")
+        Long readerId
 ) {}

@@ -25,4 +25,9 @@ public class PropertyService {
 
         return propertyRepository.save(property);
     }
+
+    public Property findById(Long propertyId) {
+        return propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new IllegalStateException("Property not found"));
+    }
 }

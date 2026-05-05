@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MeterPropertyRepository extends JpaRepository<MeterProperty, Long> {
     boolean existsByPropertyIdAndActiveTrue(Long propertyId);
+    MeterProperty findByPropertyIdAndActiveTrue(Long propertyId);
 
     MeterProperty findByMeterId(Long meterId);
 }

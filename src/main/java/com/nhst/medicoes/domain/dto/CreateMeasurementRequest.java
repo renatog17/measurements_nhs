@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public record CreateMeasurementRequest(
         Long meterId,
-        BigDecimal value,
+        BigDecimal actualVolume,
         LocalDateTime measuredAt,
         Long readerId
 ) {}

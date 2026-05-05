@@ -28,7 +28,7 @@ public class Measurement {
     private MeasurementSource source;
 
     @Column(nullable = false, precision = 12, scale = 3)
-    private BigDecimal value;
+    private BigDecimal consumedVolume;
 
     @Column(nullable = false)
     private LocalDateTime measuredAt;

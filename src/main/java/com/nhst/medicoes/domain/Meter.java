@@ -26,10 +26,10 @@ public class Meter {
     private String type;
 
     @Column(name = "value", nullable = false, precision = 12, scale = 3)
-    private BigDecimal value;
+    private BigDecimal actualVolume;
 
     @Column(name = "max_value", nullable = false, precision = 12, scale = 3)
-    private BigDecimal maxValue;
+    private BigDecimal maxVolume;
 
     @Builder.Default
     @Column(name = "reset", nullable = false)

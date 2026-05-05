@@ -22,9 +22,5 @@ public class ClientController {
         return service.create(req);
     }
 
-    @PostMapping("/assign-property")
-    @PreAuthorize("hasRole('OPERATOR')")
-    public void assign(@RequestBody AssignPropertyRequest req) {
-        service.assignProperty(req.clientId(), req.propertyId());
-    }
+
 }

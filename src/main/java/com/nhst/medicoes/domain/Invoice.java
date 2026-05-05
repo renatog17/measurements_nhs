@@ -7,6 +7,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,9 +27,10 @@ public class Invoice {
     private Meter meter;
 
     @OneToMany(mappedBy = "invoice")
-    private List<Measurement> measurements;
+    private List<Measurement> measurements = new ArrayList<Measurement>();
 
-    private BigDecimal totalValue = BigDecimal.ZERO;
+    private BigDecimal totalConsumedVolume;
+    private BigDecimal pricePerM3;
 
     private LocalDate referenceMonth = LocalDate.now();
 

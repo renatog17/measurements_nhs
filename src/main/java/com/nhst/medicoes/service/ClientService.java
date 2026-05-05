@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final PropertyRepository propertyRepository;
-    private final ClientPropertyRepository clientPropertyRepository;
 
     public Client create(CreateClientRequest req) {
 
@@ -37,23 +35,8 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public void assignProperty(Long clientId, Long propertyId) {
-
-        if (clientPropertyRepository.existsByPropertyIdAndActiveTrue(propertyId)) {
-            throw new IllegalStateException("Property already assigned");
-        }
-
-        Client client = clientRepository.findById(clientId)
+    public Client findById(Long clientId) {
+        return clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalStateException("Client not found"));
-
-        Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(() -> new IllegalStateException("Property not found"));
-
-        ClientProperty relation = ClientProperty.builder()
-                .client(client)
-                .property(property)
-                .build();
-
-        clientPropertyRepository.save(relation);
     }
 }

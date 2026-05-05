@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ClientPropertyRepository extends JpaRepository<ClientProperty, Long> {
 
     boolean existsByPropertyIdAndActiveTrue(Long propertyId);
+    ClientProperty findByPropertyIdAndActiveTrue(Long propertyId);
 }

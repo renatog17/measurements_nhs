@@ -1,10 +1,7 @@
 package com.nhst.medicoes.domain.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 
 public record CreateMeterRequest(
@@ -15,6 +12,10 @@ public record CreateMeterRequest(
 
         @NotNull(message = "Max value is required")
         @Positive(message = "Max value must be greater than zero")
-        @Digits(integer = 9, fraction = 3, message = "Max value must have up to 9 integer digits and 3 decimal places")
-        BigDecimal maxValue
+        @Digits(integer = 9, fraction = 3, message = "Max volume must have up to 9 integer digits and 3 decimal places")
+        BigDecimal maxVolume,
+        @Digits(integer = 9, fraction = 3, message = "Max volume must have up to 9 integer digits and 3 decimal places")
+        @NotNull(message = "Actual volume is required")
+        @PositiveOrZero(message = "Actual must be greater than zero")
+        BigDecimal actualVolume
 ) {}
