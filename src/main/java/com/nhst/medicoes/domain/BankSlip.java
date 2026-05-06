@@ -3,7 +3,6 @@ package com.nhst.medicoes.domain;
 import com.nhst.medicoes.domain.enums.BankSlipStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 public class BankSlip {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nossoNumero;

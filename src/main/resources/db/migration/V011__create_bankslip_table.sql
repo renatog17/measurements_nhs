@@ -15,7 +15,7 @@ CREATE TABLE bank_slip (
 
                            CONSTRAINT fk_bank_slip_invoice
                                FOREIGN KEY (invoice_id)
-                                   REFERENCES invoice(id)
+                                   REFERENCES invoices(id)
 );
 
 CREATE INDEX idx_bank_slip_invoice_id ON bank_slip(invoice_id);

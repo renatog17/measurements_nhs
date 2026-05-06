@@ -10,7 +10,8 @@ public class InvoiceJob {
 
     private final BoletoRegistrationJob service;
 
-    @Scheduled(cron = "0 0 22 * * *")
+   // @Scheduled(cron = "0 0 22 * * *")
+   @Scheduled(fixedRate = 10000)
     public void run() {
         service.process();
     }

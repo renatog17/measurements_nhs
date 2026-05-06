@@ -1,6 +1,7 @@
 package com.nhst.medicoes.cron;
 
 import com.nhst.medicoes.boletogateway.BoletoGateway;
+import com.nhst.medicoes.boletogateway.MockBoletoGateway;
 import com.nhst.medicoes.domain.*;
 import com.nhst.medicoes.domain.bank.BankBoletoRegisterRequest;
 import com.nhst.medicoes.domain.bank.BankBoletoRegisterResponse;
@@ -19,7 +20,7 @@ import java.util.List;
 public class BoletoRegistrationJob {
 
     private final InvoiceRepository invoiceRepository;
-    private final BoletoGateway boletoGateway;
+    private final MockBoletoGateway boletoGateway;
     private final BankSlipRepository bankSlipRepository;
 
     void process() {
