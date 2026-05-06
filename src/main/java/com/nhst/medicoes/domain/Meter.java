@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,6 +46,9 @@ public class Meter {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "meter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeterProperty> meterProperties = new ArrayList<>();
 
     @PrePersist
     void onCreate() {

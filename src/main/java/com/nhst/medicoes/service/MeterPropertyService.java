@@ -54,8 +54,6 @@ public class MeterPropertyService {
         invoice.setClosedAt(LocalDateTime.now());
         invoice.setMeter(meter);
         invoice.setPricePerM3(BigDecimal.ZERO);
-        //mais um, para que a regra de negócio de geração de invoice entenda que esse primeiro invoice deve
-        // ser fechado
         invoice.setTotalConsumedVolume(meter.getActualVolume());
 
         invoiceRepository.saveAndFlush(invoice);
@@ -85,6 +83,8 @@ public class MeterPropertyService {
         meterProperty.setUnassignedAt(LocalDateTime.now());
 
         meterProperty.deactivate();
+        //ao fazer unlink de meter, é necessário ter feito a leitura prévia antes
+        //ao associar o novo meter, é necessário fazer a leitura zero
 
     }
 }

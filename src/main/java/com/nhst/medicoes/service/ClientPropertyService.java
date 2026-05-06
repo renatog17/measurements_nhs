@@ -40,15 +40,17 @@ public class ClientPropertyService {
     }
 
     @Transactional
-    public void unlinkClientFromProperty(Long clientId, Long propertyId) {
+    public void unlinkClientFromProperty(Long propertyId) {
         ClientProperty clientProperty = clientPropertyRepository.findByPropertyIdAndActiveTrue(propertyId);
         clientProperty.deactivate();
         MeterProperty meterProperty = meterPropertyRepository.findByPropertyIdAndActiveTrue(propertyId);
         Meter meter = meterProperty.getMeter();
+
+        //fechar invoice existente{
         Invoice invoice = invoiceRepository.findFirstByMeterIdAndStatusOrderByCreatedAtDesc(meter.getId(), InvoiceStatus.OPEN).get();
         invoice.setStatus(InvoiceStatus.CLOSED);
         invoice.setClosedAt(LocalDateTime.now());
-
+        //}
         //ao linkar um novo client a uma property, é necessário fazer a leitura zero
 
     }

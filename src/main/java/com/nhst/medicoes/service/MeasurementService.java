@@ -4,12 +4,10 @@ package com.nhst.medicoes.service;
 import com.nhst.medicoes.domain.*;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import com.nhst.medicoes.domain.enums.MeasurementSource;
-import com.nhst.medicoes.exception.InvalidMeasurementException;
 import com.nhst.medicoes.repository.InvoiceRepository;
 import com.nhst.medicoes.repository.MeasurementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

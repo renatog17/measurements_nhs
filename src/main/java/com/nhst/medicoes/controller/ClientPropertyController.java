@@ -27,6 +27,6 @@ public class ClientPropertyController {
     @PostMapping("/unlink")
     @PreAuthorize("hasRole('OPERATOR')")
     public void unlink(@RequestBody @Valid AssignPropertyRequest req){
-        clientPropertyService.unlinkClientFromProperty(req.clientId(), req.propertyId());
+        clientPropertyService.unlinkClientFromProperty(req.propertyId());
     }
 }

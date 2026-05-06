@@ -1,5 +1,6 @@
 package com.nhst.medicoes.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,22 +24,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errors);
     }
-
-    @ExceptionHandler(InvalidMeasurementException.class)
-    public ResponseEntity<?> handleInvalidMeasurement(InvalidMeasurementException ex) {
-
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
-
-        return ResponseEntity.badRequest().body(error);
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse("BUSINESS_ERROR", ex.getMessage()));
     }
 
-    @ExceptionHandler(PendingMeterReadingException.class)
-    public ResponseEntity<?> handlePendingMeterReading(PendingMeterReadingException ex) {
-
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
-
-        return ResponseEntity.badRequest().body(error);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("GENERIC_ERROR", "Unexpected error"));
     }
+
+
 }
