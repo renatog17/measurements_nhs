@@ -16,12 +16,13 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     );
 
     @Query("""
-        select i from Invoice i
-        where i.status = 'CLOSED'
-        and not exists (
-            select bs from BankSlip bs
-            where bs.invoice = i and bs.active = true
+        SELECT i
+        FROM Invoice i
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM BankSlip b
+            WHERE b.invoice.id = i.id
         )
     """)
-    List<Invoice> findClosedWithoutActiveBankSlip();
+    List<Invoice> findInvoicesWithoutBankSlip();
 }

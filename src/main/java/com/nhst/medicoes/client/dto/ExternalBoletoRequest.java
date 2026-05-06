@@ -1,18 +1,17 @@
-package com.nhst.medicoes.domain.bank;
+package com.nhst.medicoes.client.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record BankBoletoRegisterRequest(
+public record ExternalBoletoRequest(
         Beneficiary beneficiary,
         Payer payer,
         Title title,
-        Instructions instructions
+        Charges charges
 ) {
-
     public record Beneficiary(
             String name,
-            String document, // CPF/CNPJ
+            String document,
             String agency,
             String account
     ) {}
@@ -32,14 +31,14 @@ public record BankBoletoRegisterRequest(
     ) {}
 
     public record Title(
-            String documentNumber, // invoice id
+            String documentNumber,
             BigDecimal amount,
             LocalDate dueDate,
             LocalDate issueDate
     ) {}
 
-    public record Instructions(
-            BigDecimal finePercent,     // ex: 2.0 (%)
-            BigDecimal interestPerDay   // ex: 0.033 (% ao dia)
+    public record Charges(
+            BigDecimal finePercent,
+            BigDecimal interestPerDay
     ) {}
 }
