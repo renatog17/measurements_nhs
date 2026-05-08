@@ -8,9 +8,4 @@ import java.util.List;
 
 public interface MeasurementRepository extends JpaRepository<Measurement, Long> {
 
-    boolean existsByMeterIdAndMeasuredAtGreaterThanEqualAndMeasuredAtLessThan(
-            Long meterId,
-            LocalDateTime start,
-            LocalDateTime end
-    );
 }

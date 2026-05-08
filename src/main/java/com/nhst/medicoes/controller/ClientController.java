@@ -1,7 +1,6 @@
 package com.nhst.medicoes.controller;
 
 import com.nhst.medicoes.domain.Client;
-import com.nhst.medicoes.domain.dto.AssignPropertyRequest;
 import com.nhst.medicoes.domain.dto.CreateClientRequest;
 import com.nhst.medicoes.service.ClientService;
 import jakarta.validation.Valid;

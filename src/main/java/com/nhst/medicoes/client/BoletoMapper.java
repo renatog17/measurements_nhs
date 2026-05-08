@@ -14,8 +14,7 @@ public class BoletoMapper {
 
     public ExternalBoletoRequest toExternal(Invoice invoice, Client client, Property property) {
 
-        BigDecimal amount = invoice.getTotalConsumedVolume()
-                .multiply(invoice.getPricePerM3());
+        BigDecimal amount = invoice.getTotalAmountDue();
 
         LocalDate issueDate = LocalDate.now();
 

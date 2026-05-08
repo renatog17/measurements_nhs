@@ -31,6 +31,11 @@ public class MeterService {
 
     public Meter findById(Long id){
         return meterRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Client not found"));
+                .orElseThrow(() -> new IllegalStateException("Meter not found"));
+    }
+
+    public Meter findBySerialNumber(String serialNumber){
+        return meterRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(() -> new IllegalStateException("Meter not found"));
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+//@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,5 +36,6 @@ public class BankSlip {
     private LocalDateTime paidAt;
 
     @ManyToOne
+    @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 }

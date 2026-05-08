@@ -36,7 +36,14 @@ public class Client {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClientProperty> clientProperties = new ArrayList<>();
+    private List<Installation> clientProperties = new ArrayList<>();
+
+    public Client(String name, String email, String cpf) {
+        this.name = name;
+        this.email = email;
+        this.cpf = cpf;
+        this.active = true;
+    }
 
     @PrePersist
     void onCreate() {

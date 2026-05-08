@@ -1,12 +1,8 @@
 package com.nhst.medicoes.service;
 
 import com.nhst.medicoes.domain.Client;
-import com.nhst.medicoes.domain.ClientProperty;
-import com.nhst.medicoes.domain.Property;
 import com.nhst.medicoes.domain.dto.CreateClientRequest;
-import com.nhst.medicoes.repository.ClientPropertyRepository;
 import com.nhst.medicoes.repository.ClientRepository;
-import com.nhst.medicoes.repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +22,7 @@ public class ClientService {
             throw new IllegalStateException("Email already registered");
         }
 
-        Client client = Client.builder()
-                .name(req.name())
-                .email(req.email())
-                .cpf(req.cpf())
-                .build();
+        Client client = new Client(req.name(), req.email(), req.cpf());
 
         return clientRepository.save(client);
     }

@@ -16,12 +16,7 @@ public class PropertyService {
         if (propertyRepository.findByIdentifierCode(identifierCode).isPresent()) {
             throw new IllegalStateException("Property already exists with this identifier code");
         }
-
-        Property property = Property.builder()
-                .address(address)
-                .city(city)
-                .identifierCode(identifierCode)
-                .build();
+        Property property = new Property(address, city, identifierCode);
 
         return propertyRepository.save(property);
     }

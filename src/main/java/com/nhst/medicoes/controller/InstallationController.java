@@ -1,32 +1,29 @@
 package com.nhst.medicoes.controller;
 
-import com.nhst.medicoes.domain.dto.AssignMeterRequest;
-import com.nhst.medicoes.domain.dto.AssignPropertyRequest;
-import com.nhst.medicoes.service.ClientPropertyService;
+import com.nhst.medicoes.domain.dto.CreateInstallation;
+import com.nhst.medicoes.service.InstallationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/clientproperty")
-public class ClientPropertyController {
+@RequestMapping("/installation")
+public class InstallationController {
 
-    private final ClientPropertyService clientPropertyService;
+    private final InstallationService installationService;
 
-    @PostMapping("/associate")
+    @PostMapping("")
     @PreAuthorize("hasRole('OPERATOR')")
-    public void assign(@RequestBody AssignPropertyRequest req) {
-        clientPropertyService.associatePropertyToClient(req.clientId(), req.propertyId());
+    public void assign(@RequestBody CreateInstallation req) {
+
+        installationService.createInstallation(req);
     }
 
-    @PostMapping("/unlink")
+    @PostMapping("/disable/{serialNumber}")
     @PreAuthorize("hasRole('OPERATOR')")
-    public void unlink(@RequestBody @Valid AssignPropertyRequest req){
-        clientPropertyService.unlinkClientFromProperty(req.propertyId());
+    public void unlink(@PathVariable String serialNumber){
+        installationService.disableInstallation(serialNumber);
     }
 }

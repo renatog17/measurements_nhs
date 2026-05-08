@@ -3,6 +3,7 @@ package com.nhst.medicoes.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,8 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "client_properties")
-public class ClientProperty {
+@Table(name = "installations")
+public class Installation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +25,17 @@ public class ClientProperty {
     @ManyToOne(optional = false)
     private Property property;
 
+    @ManyToOne(optional = false)
+    private Meter meter;
+
     @Builder.Default
     private boolean active = true;
 
     private LocalDateTime assignedAt;
 
     private LocalDateTime unassignedAt;
+
+    private BigDecimal volumeAtAssigned;
 
     @PrePersist
     void onCreate() {

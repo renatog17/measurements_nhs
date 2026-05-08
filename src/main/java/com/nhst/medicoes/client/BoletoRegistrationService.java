@@ -4,21 +4,17 @@ import com.nhst.medicoes.client.dto.ExternalBoletoRequest;
 import com.nhst.medicoes.client.dto.ExternalBoletoResponse;
 import com.nhst.medicoes.domain.BankSlip;
 import com.nhst.medicoes.domain.Client;
-import com.nhst.medicoes.domain.ClientProperty;
+import com.nhst.medicoes.domain.Installation;
 import com.nhst.medicoes.domain.Invoice;
-import com.nhst.medicoes.domain.MeterProperty;
 import com.nhst.medicoes.domain.Property;
 import com.nhst.medicoes.domain.enums.BankSlipStatus;
-import com.nhst.medicoes.repository.BankSlipRepository;
-import com.nhst.medicoes.repository.ClientPropertyRepository;
-import com.nhst.medicoes.repository.ClientRepository;
-import com.nhst.medicoes.repository.InvoiceRepository;
-import com.nhst.medicoes.repository.MeterPropertyRepository;
-import com.nhst.medicoes.repository.PropertyRepository;
+import com.nhst.medicoes.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,54 +23,18 @@ public class BoletoRegistrationService {
 
     private final InvoiceRepository invoiceRepository;
     private final BankSlipRepository bankSlipRepository;
-    private final MeterPropertyRepository meterPropertyRepository;
-    private final PropertyRepository propertyRepository;
-    private final ClientPropertyRepository clientPropertyRepository;
-    private final ClientRepository clientRepository;
     private final BankApiClient bankApiClient;
     private final BoletoMapper mapper;
 
     @Transactional
     public void registerBoletos() {
-        List<Invoice> invoices = invoiceRepository.findInvoicesWithoutBankSlip();
-
+        List<Invoice> invoices = invoiceRepository.findInvoicesWithoutBankSlipAndStatusClosed();
         for (Invoice invoice : invoices) {
+            if (invoice.getPricePerM3().compareTo(BigDecimal.ZERO) == 0) continue;
+            Installation installation = invoice.getInstallation();
 
-            if (bankSlipRepository.existsByInvoiceId(invoice.getId())) {
-                continue;
-            }
-
-            MeterProperty meterProperty = meterPropertyRepository
-                    .findFirstByMeterIdAndActiveTrueOrderByAssignedAtDesc(invoice.getMeter().getId())
-                    .orElse(null);
-
-            if (meterProperty == null || meterProperty.getProperty() == null) {
-                continue;
-            }
-
-            Property property = propertyRepository
-                    .findById(meterProperty.getProperty().getId())
-                    .orElse(null);
-
-            if (property == null) {
-                continue;
-            }
-
-            ClientProperty clientProperty = clientPropertyRepository
-                    .findFirstByPropertyIdAndActiveTrueOrderByAssignedAtDesc(property.getId())
-                    .orElse(null);
-
-            if (clientProperty == null || clientProperty.getClient() == null) {
-                continue;
-            }
-
-            Client client = clientRepository
-                    .findById(clientProperty.getClient().getId())
-                    .orElse(null);
-
-            if (client == null) {
-                continue;
-            }
+            Client client = installation.getClient();
+            Property property = installation.getProperty();
 
             ExternalBoletoRequest request = mapper.toExternal(invoice, client, property);
 
@@ -92,8 +52,10 @@ public class BoletoRegistrationService {
                     .dueDate(response.dueDate())
                     .status(BankSlipStatus.REGISTERED)
                     .active(true)
+                    .paid(false)
                     .invoice(invoice)
                     .build();
+
 
             bankSlipRepository.save(bankSlip);
         }

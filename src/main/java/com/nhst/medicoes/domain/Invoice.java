@@ -3,6 +3,7 @@ package com.nhst.medicoes.domain;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,9 +24,7 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    private Meter meter;
-
+    @Builder.Default
     @OneToMany(mappedBy = "invoice")
     private List<Measurement> measurements = new ArrayList<Measurement>();
 
@@ -39,4 +38,18 @@ public class Invoice {
 
     private LocalDateTime closedAt;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private BigDecimal volumeDifference;
+    private BigDecimal totalAmountDue;
+    @ManyToOne
+    @JoinColumn(name = "installation_id")
+    private Installation installation;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BankSlip> bankSlips = new ArrayList<>();
+
+    public void closeInvoice(){
+        this.status = InvoiceStatus.CLOSED;
+        this.setClosedAt(LocalDateTime.now());
+    }
 }

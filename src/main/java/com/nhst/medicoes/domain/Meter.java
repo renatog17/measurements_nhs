@@ -24,13 +24,10 @@ public class Meter {
     @Column(name = "serial_number", unique = true, nullable = false, length = 120)
     private String serialNumber;
 
-    @Column(name = "type", length = 50)
-    private String type;
-
-    @Column(name = "value", nullable = false, precision = 12, scale = 3)
+    @Column(name = "actual_volume", nullable = false, precision = 12, scale = 3)
     private BigDecimal actualVolume;
 
-    @Column(name = "max_value", nullable = false, precision = 12, scale = 3)
+    @Column(name = "max_volume", nullable = false, precision = 12, scale = 3)
     private BigDecimal maxVolume;
 
     @Builder.Default
@@ -48,7 +45,7 @@ public class Meter {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "meter", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MeterProperty> meterProperties = new ArrayList<>();
+    private List<Installation> installations = new ArrayList<>();
 
     @PrePersist
     void onCreate() {

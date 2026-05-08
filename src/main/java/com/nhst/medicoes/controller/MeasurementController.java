@@ -21,7 +21,7 @@ public class MeasurementController {
             @RequestBody CreateMeasurementRequest createMeasurementRequest
     ) throws Exception {
         measurementService.createMeasurement(createMeasurementRequest.measuredAt(),
-                createMeasurementRequest.meterId(),
+                createMeasurementRequest.meterSerialNumber(),
                 createMeasurementRequest.actualVolume(),
                 createMeasurementRequest.readerId());
 

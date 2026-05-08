@@ -1,5 +1,6 @@
 package com.nhst.medicoes.client;
 
+import com.nhst.medicoes.client.dto.BoletoStatusResponse;
 import com.nhst.medicoes.client.dto.ExternalBoletoRequest;
 import com.nhst.medicoes.client.dto.ExternalBoletoResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,19 @@ public class BankApiClient {
     public ExternalBoletoResponse createBoleto(ExternalBoletoRequest request) {
         ResponseEntity<ExternalBoletoResponse> response =
                 restTemplate.postForEntity(URL, request, ExternalBoletoResponse.class);
+
+        return response.getBody();
+    }
+
+    public BoletoStatusResponse getStatus(
+            String nossoNumero
+    ) {
+
+        ResponseEntity<BoletoStatusResponse> response =
+                restTemplate.getForEntity(
+                        URL + "/" + nossoNumero,
+                        BoletoStatusResponse.class
+                );
 
         return response.getBody();
     }

@@ -27,17 +27,23 @@ public class Property {
     @Column(unique = true)
     private String identifierCode;
 
-    @Builder.Default
     private boolean active = true;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MeterProperty> meterProperties = new ArrayList<>();
+    private List<Installation> meterProperties = new ArrayList<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClientProperty> clientProperties = new ArrayList<>();
+    private List<Installation> clientProperties = new ArrayList<>();
+
+    public Property(String address, String city, String identifierCode) {
+        this.address = address;
+        this.city = city;
+        this.identifierCode = identifierCode;
+        this.active = true;
+    }
 
     @PrePersist
     void onCreate() {

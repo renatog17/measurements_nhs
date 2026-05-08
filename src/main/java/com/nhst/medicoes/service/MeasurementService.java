@@ -4,6 +4,7 @@ package com.nhst.medicoes.service;
 import com.nhst.medicoes.domain.*;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import com.nhst.medicoes.domain.enums.MeasurementSource;
+import com.nhst.medicoes.repository.InstallationRepository;
 import com.nhst.medicoes.repository.InvoiceRepository;
 import com.nhst.medicoes.repository.MeasurementRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class MeasurementService {
     private final ReaderService readerService;
     private final InvoiceService invoiceService;
     private final InvoiceRepository invoiceRepository;
+    private final InstallationRepository installationRepository;
 
     @Value("${billing.price-per-m3}")
     private BigDecimal pricePerM3;
@@ -34,51 +36,58 @@ public class MeasurementService {
 
 
     @Transactional
-    public void createMeasurement(LocalDateTime measuredAt, Long meterId, BigDecimal value, Long readerId) throws Exception {
-        Meter meter = meterService.findById(meterId);
-        Optional<Invoice> optionalInvoice = invoiceService.findByMeterId(meterId);
-        Invoice lastClosed = invoiceService.findLastClosedByMeterId(meterId);
+    public void createMeasurement(LocalDateTime measuredAt, String serialNumber, BigDecimal value, Long readerId) throws Exception {
+        Meter meter = meterService.findBySerialNumber(serialNumber);
+        Installation installation = installationRepository.findByMeterAndActiveTrue(meter)
+                .orElseThrow(() -> new IllegalStateException("Não foi encontrada instalação ativa para este medidor."));
         Reader reader = readerService.findById(readerId);
 
         Measurement measurement = new Measurement();
         measurement.setMeasuredAt(measuredAt);
-        measurement.setMeter(meter);
         measurement.setConsumedVolume(value);
         measurement.setReader(reader);
         measurement.setSource(MeasurementSource.MANUAL_APP);
         meter.setActualVolume(value);
 
-        Invoice invoice;
+        Invoice invoice = invoiceRepository
+                .findByInstallationAndStatusOpen(installation)
+                .map(existingInvoice -> {
+                    existingInvoice.setTotalConsumedVolume(meter.getActualVolume());
+                    existingInvoice.setReferenceMonth(LocalDate.now());
+                    return existingInvoice;
+                })
+                .orElseGet(() -> Invoice.builder()
+                        .status(InvoiceStatus.OPEN)
+                        .createdAt(LocalDateTime.now())
+                        .totalConsumedVolume(meter.getActualVolume())
+                        .pricePerM3(pricePerM3)
+                        .referenceMonth(LocalDate.now())
+                        .installation(installation)
+                        .build()
+                );
 
-        //criar ou usar um invoice já existente
-        if(optionalInvoice.isPresent()){
-            invoice = optionalInvoice.get();
-            measurement.setInvoice(invoice);
-            invoice.setTotalConsumedVolume(meter.getActualVolume());
-            invoice.setReferenceMonth(LocalDate.now());
-        }else{
-            invoice = new Invoice();
-            invoice.setCreatedAt(LocalDateTime.now());
-            invoice.setMeter(meter);
-            invoice.setTotalConsumedVolume(meter.getActualVolume());
-            invoice.setPricePerM3(pricePerM3);
-            invoice.setReferenceMonth(LocalDate.now());
-            measurement.setInvoice(invoice);
-        }
+        measurement.setInvoice(invoice);
 
         //verificar se já pode fechar o invoice
+        Invoice invoiceLastClosed = invoiceRepository.findFirstByInstallationAndStatusClosedOrderByClosedAtDesc(installation.getId())
+                .orElseThrow(() -> new IllegalStateException("Não foi feita a leitura inicial para esta instalação"));
         BigDecimal consumoAtual = invoice.getTotalConsumedVolume();
-        BigDecimal consumoAnterior = lastClosed.getTotalConsumedVolume();
+        BigDecimal consumoAnterior = invoiceLastClosed.getTotalConsumedVolume();
 
         BigDecimal diferenca = consumoAtual.subtract(consumoAnterior);
 
         if (diferenca.compareTo(minimumConsumptionM3) > 0
         ||
-        invoice.getMeasurements().size() > 3
+        invoice.getMeasurements().size() >= 3
         ) {
             invoice.setStatus(InvoiceStatus.CLOSED);
             invoice.setClosedAt(LocalDateTime.now());
 
+
+            BigDecimal diff = invoice.getTotalConsumedVolume().subtract(invoiceLastClosed.getTotalConsumedVolume());
+
+            invoice.setTotalAmountDue(pricePerM3.multiply(diff));
+            invoice.setVolumeDifference(diff);
         }
         invoiceRepository.saveAndFlush(invoice);
         measurementRepository.save(measurement);

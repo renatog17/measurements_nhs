@@ -1,4 +1,4 @@
-package com.nhst.medicoes.client;
+package com.nhst.medicoes.client.cron;
 
 import com.nhst.medicoes.client.BoletoRegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ public class BoletoRegistrationJob {
     private final BoletoRegistrationService service;
 
     //@Scheduled(cron = "0 0 2 * * *")
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 10000)
     public void execute() {
         service.registerBoletos();
     }
