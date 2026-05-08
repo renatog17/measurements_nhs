@@ -1,4 +1,4 @@
-package com.nhst.medicoes.cron;
+package com.nhst.medicoes.client;
 
 import com.nhst.medicoes.client.BoletoRegistrationService;
 import lombok.RequiredArgsConstructor;

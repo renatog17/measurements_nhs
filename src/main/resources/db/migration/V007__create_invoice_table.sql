@@ -5,6 +5,8 @@ CREATE TABLE invoices (
 
                           reference_month DATE NOT NULL,
 
+                          meter_property_id BIGINT NOT NULL,
+
                           total_consumed_volume NUMERIC(12,3) NOT NULL DEFAULT 0,
 
                           price_per_m3 NUMERIC(10,4) NOT NULL,
@@ -15,7 +17,9 @@ CREATE TABLE invoices (
 
                           closed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-
+                          CONSTRAINT fk_measurement_meter
+                              FOREIGN KEY (meter_property_id)
+                                  REFERENCES meter_properties (id),
 
                           CONSTRAINT fk_invoice_meter
                               FOREIGN KEY (meter_id)

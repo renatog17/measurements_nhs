@@ -2,7 +2,6 @@ package com.nhst.medicoes.service;
 
 import com.nhst.medicoes.domain.*;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
-import com.nhst.medicoes.domain.enums.MeasurementSource;
 import com.nhst.medicoes.repository.ClientPropertyRepository;
 import com.nhst.medicoes.repository.InvoiceRepository;
 import com.nhst.medicoes.repository.MeterPropertyRepository;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +25,13 @@ public class ClientPropertyService {
     public void associatePropertyToClient(Long clientId, Long propertyId) {
         //1 fazer associação
         if (clientPropertyRepository.existsByPropertyIdAndActiveTrue(propertyId)) {
-            throw new IllegalStateException("Property already has an active meter");
+            throw new IllegalStateException("Property already has an active owner");
         }
 
         Client client = clientService.findById(clientId);
         Property property = propertyService.findById(propertyId);
 
-        ClientProperty relation = ClientProperty.builder()
+        Installation relation = Installation.builder()
                 .client(client)
                 .property(property)
                 .build();
@@ -41,17 +41,20 @@ public class ClientPropertyService {
 
     @Transactional
     public void unlinkClientFromProperty(Long propertyId) {
-        ClientProperty clientProperty = clientPropertyRepository.findByPropertyIdAndActiveTrue(propertyId);
+        Installation clientProperty = clientPropertyRepository.findFirstByPropertyIdAndActiveTrueOrderByAssignedAtDesc(propertyId).get();
         clientProperty.deactivate();
-        MeterProperty meterProperty = meterPropertyRepository.findByPropertyIdAndActiveTrue(propertyId);
-        Meter meter = meterProperty.getMeter();
 
-        //fechar invoice existente{
-        Invoice invoice = invoiceRepository.findFirstByMeterIdAndStatusOrderByCreatedAtDesc(meter.getId(), InvoiceStatus.OPEN).get();
-        invoice.setStatus(InvoiceStatus.CLOSED);
-        invoice.setClosedAt(LocalDateTime.now());
-        //}
-        //ao linkar um novo client a uma property, é necessário fazer a leitura zero
+        MeterProperty meterProperty = meterPropertyRepository.findFirstByPropertyIdAndActiveTrueOrderByAssignedAtDesc(propertyId).get();
+
+        Optional<Invoice> optInvoice = invoiceRepository.findFirstByMeterPropertyAndStatus(meterProperty, InvoiceStatus.OPEN);
+
+        if(optInvoice.isPresent()){
+            Invoice invoice = optInvoice.get();
+            invoice.setStatus(InvoiceStatus.CLOSED);
+            invoice.setClosedAt(LocalDateTime.now());
+        }
+
+        //após linkar um novo client a uma property, é necessário fazer a leitura zero
 
     }
 }
