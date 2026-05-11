@@ -1,8 +1,7 @@
 package com.nhst.medicoes.controller;
 
-import com.nhst.medicoes.domain.dto.CreateInstallation;
+import com.nhst.medicoes.controller.dto.CreateInstallation;
 import com.nhst.medicoes.service.InstallationService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

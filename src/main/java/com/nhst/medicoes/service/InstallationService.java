@@ -1,7 +1,7 @@
 package com.nhst.medicoes.service;
 
 import com.nhst.medicoes.domain.*;
-import com.nhst.medicoes.domain.dto.CreateInstallation;
+import com.nhst.medicoes.controller.dto.CreateInstallation;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import com.nhst.medicoes.domain.enums.MeasurementSource;
 import com.nhst.medicoes.repository.InstallationRepository;

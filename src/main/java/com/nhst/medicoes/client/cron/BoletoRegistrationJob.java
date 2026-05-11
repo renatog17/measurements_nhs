@@ -12,8 +12,8 @@ public class BoletoRegistrationJob {
     private final BoletoRegistrationService service;
 
     //@Scheduled(cron = "0 0 2 * * *")
-    @Scheduled(fixedRate = 10000)
-    public void execute() {
-        service.registerBoletos();
-    }
+//    @Scheduled(fixedRate = 10000)
+//    public void execute() {
+//        service.registerBoletos();
+//    }
 }

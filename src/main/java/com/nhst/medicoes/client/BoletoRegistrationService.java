@@ -2,6 +2,7 @@ package com.nhst.medicoes.client;
 
 import com.nhst.medicoes.client.dto.ExternalBoletoRequest;
 import com.nhst.medicoes.client.dto.ExternalBoletoResponse;
+import com.nhst.medicoes.comunication.templates.InvoiceAvailableEmail;
 import com.nhst.medicoes.domain.BankSlip;
 import com.nhst.medicoes.domain.Client;
 import com.nhst.medicoes.domain.Installation;
@@ -25,6 +26,7 @@ public class BoletoRegistrationService {
     private final BankSlipRepository bankSlipRepository;
     private final BankApiClient bankApiClient;
     private final BoletoMapper mapper;
+    private final InvoiceAvailableEmail InvoiceAvailableEmail;
 
     @Transactional
     public void registerBoletos() {
@@ -39,6 +41,8 @@ public class BoletoRegistrationService {
             ExternalBoletoRequest request = mapper.toExternal(invoice, client, property);
 
             ExternalBoletoResponse response = bankApiClient.createBoleto(request);
+
+
 
             if (response == null || response.errorCode() != null) {
                 continue;
@@ -58,6 +62,7 @@ public class BoletoRegistrationService {
 
 
             bankSlipRepository.save(bankSlip);
+            InvoiceAvailableEmail.enviarEmail(invoice);
         }
     }
 }

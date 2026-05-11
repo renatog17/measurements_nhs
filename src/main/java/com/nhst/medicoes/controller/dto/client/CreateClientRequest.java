@@ -1,4 +1,4 @@
-package com.nhst.medicoes.domain.dto;
+package com.nhst.medicoes.controller.dto.client;
 
 import com.nhst.medicoes.domain.validation.ValidCpf;
 import jakarta.validation.constraints.Email;

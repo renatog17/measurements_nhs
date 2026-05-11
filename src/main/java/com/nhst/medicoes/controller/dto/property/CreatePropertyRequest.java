@@ -1,4 +1,4 @@
-package com.nhst.medicoes.domain.dto;
+package com.nhst.medicoes.controller.dto.property;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

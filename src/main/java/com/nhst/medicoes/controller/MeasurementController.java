@@ -1,6 +1,6 @@
 package com.nhst.medicoes.controller;
 
-import com.nhst.medicoes.domain.dto.CreateMeasurementRequest;
+import com.nhst.medicoes.controller.dto.CreateMeasurementRequest;
 import com.nhst.medicoes.service.MeasurementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

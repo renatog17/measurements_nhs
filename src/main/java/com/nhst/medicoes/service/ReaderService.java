@@ -1,9 +1,13 @@
 package com.nhst.medicoes.service;
 
+import com.nhst.medicoes.controller.dto.reader.ReaderFilter;
+import com.nhst.medicoes.controller.dto.reader.ReaderResponse;
 import com.nhst.medicoes.domain.Reader;
-import com.nhst.medicoes.domain.dto.CreateReaderRequest;
+import com.nhst.medicoes.controller.dto.reader.CreateReaderRequest;
 import com.nhst.medicoes.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +36,14 @@ public class ReaderService {
 
     public Reader findById(Long readerId) {
         return readerRepository.findById(readerId).orElseThrow();
+    }
+
+    public Page<ReaderResponse> findAll(ReaderFilter filter, Pageable pageable){
+        Page<Reader> readers = readerRepository.findAll(
+                ReaderSpecification.withFilters(filter),
+                pageable
+        );
+
+        return readers.map(ReaderResponse::fromEntity);
     }
 }

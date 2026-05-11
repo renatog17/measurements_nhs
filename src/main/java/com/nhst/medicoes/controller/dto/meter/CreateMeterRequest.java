@@ -1,4 +1,4 @@
-package com.nhst.medicoes.domain.dto;
+package com.nhst.medicoes.controller.dto.meter;
 
 import jakarta.validation.constraints.*;
 

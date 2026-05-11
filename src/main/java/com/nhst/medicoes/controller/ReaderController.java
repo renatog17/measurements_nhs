@@ -1,16 +1,19 @@
 package com.nhst.medicoes.controller;
 
 
+import com.nhst.medicoes.controller.dto.reader.ReaderFilter;
+import com.nhst.medicoes.controller.dto.reader.ReaderResponse;
 import com.nhst.medicoes.domain.Reader;
-import com.nhst.medicoes.domain.dto.CreateReaderRequest;
+import com.nhst.medicoes.controller.dto.reader.CreateReaderRequest;
 import com.nhst.medicoes.service.ReaderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -29,5 +32,15 @@ public class ReaderController {
         return ResponseEntity
                 .created(URI.create("/readers/" + reader.getId()))
                 .body(reader);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('OPERATOR')")
+    public Page<ReaderResponse> findAll(
+            ReaderFilter filter,
+            @PageableDefault(size = 10, sort = "name")
+            Pageable pageable
+    ){
+        return readerService.findAll(filter, pageable);
     }
 }
