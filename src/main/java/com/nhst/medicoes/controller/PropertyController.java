@@ -26,7 +26,8 @@ public class PropertyController {
         return propertyService.create(
                 req.address(),
                 req.city(),
-                req.identifierCode()
+                req.identifierCode(),
+                req.parentPropertyId()
         );
     }
 

@@ -1,6 +1,6 @@
 CREATE TABLE installations (
     id BIGSERIAL PRIMARY KEY,
-    client_id BIGINT NOT NULL,
+    client_id BIGINT,
     property_id BIGINT NOT NULL,
     meter_id BIGINT NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,

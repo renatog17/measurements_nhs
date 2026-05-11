@@ -15,13 +15,18 @@ public class PropertyService {
 
     private final PropertyRepository propertyRepository;
 
-    public Property create(String address, String city, String identifierCode) {
+    public Property create(String address, String city, String identifierCode, Long parentPropertyId) {
+
 
         if (propertyRepository.findByIdentifierCode(identifierCode).isPresent()) {
             throw new IllegalStateException("Property already exists with this identifier code");
         }
         Property property = new Property(address, city, identifierCode);
-
+        if(parentPropertyId != null) {
+            Property parentProperty = propertyRepository.findById(parentPropertyId)
+                    .orElseThrow(() -> new IllegalStateException("Property not found"));
+            property.setParentProperty(parentProperty);
+        }
         return propertyRepository.save(property);
     }
 

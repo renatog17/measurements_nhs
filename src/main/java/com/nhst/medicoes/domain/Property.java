@@ -38,6 +38,13 @@ public class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Installation> clientProperties = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_property_id")
+    private Property parentProperty;
+
+    @OneToMany(mappedBy = "parentProperty")
+    private List<Property> childProperties = new ArrayList<>();
+
     public Property(String address, String city, String identifierCode) {
         this.address = address;
         this.city = city;

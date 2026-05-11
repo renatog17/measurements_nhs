@@ -10,4 +10,7 @@ public class PropertyFilter {
     private String city;
     private String identifierCode;
     private Boolean active;
+    private Long parentPropertyId;
+
+
 }

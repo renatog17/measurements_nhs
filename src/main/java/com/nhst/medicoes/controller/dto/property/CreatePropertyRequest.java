@@ -15,5 +15,7 @@ public record CreatePropertyRequest(
 
         @NotBlank(message = "Identifier code is required")
         @Size(max = 120, message = "Identifier code must have at most 120 characters")
-        String identifierCode
+        String identifierCode,
+
+        Long parentPropertyId
 ) {}

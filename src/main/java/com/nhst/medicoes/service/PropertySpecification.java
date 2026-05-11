@@ -50,6 +50,16 @@ public class PropertySpecification {
                 );
             }
 
+            if (filter.getParentPropertyId() != null) {
+
+                predicates.add(
+                        criteriaBuilder.equal(
+                                root.get("parentProperty").get("id"),
+                                filter.getParentPropertyId()
+                        )
+                );
+            }
+
             return criteriaBuilder.and(
                     predicates.toArray(new Predicate[0])
             );

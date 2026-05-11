@@ -1,4 +1,5 @@
 package com.nhst.medicoes.controller.dto.property;
+
 import com.nhst.medicoes.domain.Property;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ public class PropertyResponse {
     private String city;
     private String identifierCode;
     private boolean active;
+    private Long parentPropertyId;
 
     public static PropertyResponse fromEntity(Property property) {
 
@@ -19,6 +21,11 @@ public class PropertyResponse {
                 .city(property.getCity())
                 .identifierCode(property.getIdentifierCode())
                 .active(property.isActive())
+                .parentPropertyId(
+                        property.getParentProperty() != null
+                                ? property.getParentProperty().getId()
+                                : null
+                )
                 .build();
     }
 }
