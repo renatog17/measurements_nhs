@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.domain.enums.PropertyType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,9 +25,14 @@ public class Property {
     @JoinColumn(name = "address_id")
     private Address address;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PropertyType type;
+
     @Column(unique = true)
     private String identifierCode;
 
+    @Builder.Default
     private boolean active = true;
 
     private LocalDateTime createdAt;
@@ -50,7 +56,6 @@ public class Property {
         this.address = address;
         this.name = name;
         this.identifierCode = identifierCode;
-        this.active = true;
     }
 
     @PrePersist

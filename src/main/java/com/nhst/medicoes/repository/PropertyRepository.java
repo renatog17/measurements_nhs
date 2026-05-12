@@ -1,6 +1,7 @@
 package com.nhst.medicoes.repository;
 
 import com.nhst.medicoes.domain.Property;
+import com.nhst.medicoes.domain.enums.PropertyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -11,4 +12,5 @@ public interface PropertyRepository extends
         JpaSpecificationExecutor<Property> {
 
     Optional<Property> findByIdentifierCode(String identifierCode);
+    long countByType(PropertyType type);
 }

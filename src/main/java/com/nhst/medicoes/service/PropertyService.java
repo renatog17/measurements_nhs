@@ -5,6 +5,7 @@ import com.nhst.medicoes.controller.dto.property.PropertyFilter;
 import com.nhst.medicoes.controller.dto.property.PropertyResponse;
 import com.nhst.medicoes.domain.Address;
 import com.nhst.medicoes.domain.Property;
+import com.nhst.medicoes.domain.enums.PropertyType;
 import com.nhst.medicoes.repository.AddressRepository;
 import com.nhst.medicoes.repository.PropertyRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,35 +22,45 @@ public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final AddressRepository addressRepository;
 
-    public Property create(String identifierCode,
-                           CreateAddressRequest addressRequest,
-                           Long parentPropertyId,
-                           String name) {
+    public Property create(
+            CreateAddressRequest addressRequest,
+            Long parentPropertyId,
+            String name,
+            PropertyType propertyType
+    ) {
 
-
-        if (propertyRepository.findByIdentifierCode(identifierCode).isPresent()) {
-            throw new IllegalStateException("Property already exists with this identifier code");
-        }
-
-        Address address = new Address();
-
-        address.setStreet(addressRequest.street());
-        address.setNumber(addressRequest.number());
-        address.setComplement(addressRequest.complement());
-        address.setNeighborhood(addressRequest.neighborhood());
-        address.setCity(addressRequest.city());
-        address.setState(addressRequest.state());
-        address.setZipCode(addressRequest.zipCode());
+        Address address = Address.builder()
+                .street(addressRequest.street())
+                .number(addressRequest.number())
+                .complement(addressRequest.complement())
+                .neighborhood(addressRequest.neighborhood())
+                .city(addressRequest.city())
+                .state(addressRequest.state())
+                .zipCode(addressRequest.zipCode())
+                .build();
 
         addressRepository.saveAndFlush(address);
 
-        Property property = new Property(address, identifierCode, name);
+        long countByType = propertyRepository.countByType(propertyType);
 
-        if(parentPropertyId != null) {
+        String generatedCode =
+                propertyType.name().substring(0, 4)
+                        + String.format("%04d", countByType + 1);
+
+        Property property = Property.builder()
+                .address(address)
+                .identifierCode(generatedCode)
+                .name(name)
+                .type(propertyType)
+                .build();
+
+        if (parentPropertyId != null) {
             Property parentProperty = propertyRepository.findById(parentPropertyId)
                     .orElseThrow(() -> new IllegalStateException("Property not found"));
+
             property.setParentProperty(parentProperty);
         }
+
         return propertyRepository.save(property);
     }
 
