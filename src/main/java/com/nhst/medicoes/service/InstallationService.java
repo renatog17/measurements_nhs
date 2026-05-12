@@ -51,40 +51,45 @@ public class InstallationService {
             throw new IllegalStateException("This installation already exists.");
         }
 
+        Installation installation = new Installation();
+
         Client client = clientService.findById(req.clientId());
         Property property = propertyService.findById(req.propertyId());
-        Meter meter = meterService.findById(req.meterId());
-        Reader reader = readerRepository.findById(req.readerId()).get();
 
-        Installation installation = new Installation();
         installation.setProperty(property);
-        installation.setMeter(meter);
         installation.setClient(client);
         installation.setAssignedAt(LocalDateTime.now());
-        installation.setVolumeAtAssigned(req.volumeAtAssigned());
 
         installationRepository.saveAndFlush(installation);
 
-        Invoice invoice = new Invoice();
-        invoice.setInstallation(installation);;
-        invoice.setCreatedAt(LocalDateTime.now());
-        invoice.setStatus(InvoiceStatus.CLOSED);
-        invoice.setTotalConsumedVolume(req.volumeAtAssigned());
-        invoice.setReferenceMonth(LocalDate.now());
-        invoice.setClosedAt(LocalDateTime.now());
-        invoice.setPricePerM3(BigDecimal.ZERO);
+        if(req.meterId() !=null){
+            Meter meter = meterService.findById(req.meterId());
+            installation.setMeter(meter);
+            Reader reader = readerRepository.findById(req.readerId()).get();
 
-        invoiceRepository.saveAndFlush(invoice);
+            Invoice invoice = new Invoice();
+            invoice.setInstallation(installation);;
+            invoice.setCreatedAt(LocalDateTime.now());
+            invoice.setStatus(InvoiceStatus.CLOSED);
+            invoice.setTotalConsumedVolume(req.volumeAtAssigned());
+            invoice.setReferenceMonth(LocalDate.now());
+            invoice.setClosedAt(LocalDateTime.now());
+            invoice.setPricePerM3(BigDecimal.ZERO);
 
-        Measurement measurement = new Measurement();
-        measurement.setInvoice(invoice);
-        measurement.setReader(reader);
-        measurement.setConsumedVolume(req.volumeAtAssigned());
-        measurement.setSource(MeasurementSource.INITIALIZATION);
-        measurement.setMeasuredAt(LocalDateTime.now());
-        measurement.setCreatedAt(LocalDateTime.now());
+            invoiceRepository.saveAndFlush(invoice);
 
-        measurementRepository.save(measurement);
+            installation.setVolumeAtAssigned(req.volumeAtAssigned());
+            Measurement measurement = new Measurement();
+            measurement.setInvoice(invoice);
+            measurement.setReader(reader);
+            measurement.setConsumedVolume(req.volumeAtAssigned());
+            measurement.setSource(MeasurementSource.INITIALIZATION);
+            measurement.setMeasuredAt(LocalDateTime.now());
+            measurement.setCreatedAt(LocalDateTime.now());
+
+            measurementRepository.save(measurement);
+        }
+
 
     }
 }

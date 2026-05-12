@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
@@ -26,7 +28,9 @@ public class ClientController {
     public ResponseEntity<ClientResponse> create(@RequestBody @Valid CreateClientRequest req) {
         Client client = service.create(req);
         ClientResponse response = ClientResponse.fromEntity(client);
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+                .created(URI.create("/client/" + response.getId()))
+                .body(response);
     }
 
     @GetMapping

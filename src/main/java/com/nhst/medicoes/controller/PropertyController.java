@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/properties")
 @RequiredArgsConstructor
@@ -31,8 +33,10 @@ public class PropertyController {
                 req.name(),
                 req.type()
         );
-        PropertyResponse propertyResponse = PropertyResponse.fromEntity(property);
-        return ResponseEntity.ok(propertyResponse);
+        PropertyResponse response = PropertyResponse.fromEntity(property);
+        return ResponseEntity
+                .created(URI.create("/property/" + response.getId()))
+                .body(response);
     }
 
     @GetMapping

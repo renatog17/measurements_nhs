@@ -3,14 +3,18 @@ package com.nhst.medicoes.controller;
 import com.nhst.medicoes.controller.dto.meter.CreateMeterRequest;
 import com.nhst.medicoes.controller.dto.meter.MeterFilter;
 import com.nhst.medicoes.controller.dto.meter.MeterResponse;
+import com.nhst.medicoes.domain.Meter;
 import com.nhst.medicoes.service.MeterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/meters")
@@ -21,8 +25,12 @@ public class MeterController {
 
     @PostMapping
     @PreAuthorize("hasRole('OPERATOR')")
-    public void create(@RequestBody @Valid CreateMeterRequest req) {
-        meterService.create(req.serialNumber(), req.maxVolume(), req.actualVolume());
+    public ResponseEntity<MeterResponse> create(@RequestBody @Valid CreateMeterRequest req) {
+        Meter meter = meterService.create(req.serialNumber(), req.maxVolume(), req.actualVolume());
+        MeterResponse response = MeterResponse.fromEntity(meter);
+        return ResponseEntity
+                .created(URI.create("/meter/" + response.getId()))
+                .body(response);
     }
 
     @GetMapping
