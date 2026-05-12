@@ -1,9 +1,12 @@
 package com.nhst.medicoes.service;
 
+import com.nhst.medicoes.domain.Address;
 import com.nhst.medicoes.domain.Client;
 import com.nhst.medicoes.controller.dto.client.ClientFilter;
 import com.nhst.medicoes.controller.dto.client.ClientResponse;
 import com.nhst.medicoes.controller.dto.client.CreateClientRequest;
+import com.nhst.medicoes.domain.enums.PersonType;
+import com.nhst.medicoes.repository.AddressRepository;
 import com.nhst.medicoes.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,18 +18,30 @@ import org.springframework.stereotype.Service;
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final AddressRepository addressRepository;
 
     public Client create(CreateClientRequest req) {
 
-        if (clientRepository.existsByCpf(req.cpf())) {
+        if (clientRepository.existsByDocument(req.document())) {
             throw new IllegalStateException("CPF already registered");
         }
 
         if (clientRepository.existsByEmail(req.email())) {
             throw new IllegalStateException("Email already registered");
         }
+        Address address = new Address();
 
-        Client client = new Client(req.name(), req.email(), req.cpf());
+        address.setStreet(req.addressRequest().street());
+        address.setNumber(req.addressRequest().number());
+        address.setComplement(req.addressRequest().complement());
+        address.setNeighborhood(req.addressRequest().neighborhood());
+        address.setCity(req.addressRequest().city());
+        address.setState(req.addressRequest().state());
+        address.setZipCode(req.addressRequest().zipCode());
+
+        addressRepository.saveAndFlush(address);
+
+        Client client = new Client(req.name(), req.email(), req.document(), req.personType(), address);
 
         return clientRepository.save(client);
     }

@@ -1,8 +1,10 @@
 package com.nhst.medicoes.controller.dto.client;
 
-import com.nhst.medicoes.domain.validation.ValidCpf;
+import com.nhst.medicoes.controller.dto.address.CreateAddressRequest;
+import com.nhst.medicoes.domain.enums.PersonType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateClientRequest(
@@ -15,7 +17,14 @@ public record CreateClientRequest(
         @Email(message = "Email must be valid")
         String email,
 
-        @NotBlank(message = "CPF is required")
-        @ValidCpf
-        String cpf
+        @NotBlank(message = "Document is required")
+        @Size(min = 11, max = 20, message = "Document must be valid (CPF or CNPJ)")
+        String document,
+
+        @NotNull(message = "Person type is required")
+        PersonType personType,
+
+        @NotNull(message = "Address is required")
+        CreateAddressRequest addressRequest
+
 ) {}

@@ -34,9 +34,15 @@ public class ClientSpecification {
                 );
             }
 
-            if (filter.getCpf() != null && !filter.getCpf().isBlank()) {
+            if (filter.getDocument() != null && !filter.getDocument().isBlank()) {
                 predicates.add(
-                        criteriaBuilder.equal(root.get("cpf"), filter.getCpf())
+                        criteriaBuilder.equal(root.get("document"), filter.getDocument())
+                );
+            }
+
+            if (filter.getPersonType() != null) {
+                predicates.add(
+                        criteriaBuilder.equal(root.get("personType"), filter.getPersonType())
                 );
             }
 

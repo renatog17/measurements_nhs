@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.domain.enums.PersonType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,11 +24,19 @@ public class Client {
     @Column(nullable = false)
     private String name;
 
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
+
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 11)
-    private String cpf;
+    @Column(nullable = false, length = 20)
+    private String document;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PersonType personType;
 
     @Builder.Default
     private boolean active = true;
@@ -36,12 +45,14 @@ public class Client {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Installation> clientProperties = new ArrayList<>();
+    private List<Installation> installations = new ArrayList<>();
 
-    public Client(String name, String email, String cpf) {
+    public Client(String name, String email, String document, PersonType personType, Address address) {
         this.name = name;
         this.email = email;
-        this.cpf = cpf;
+        this.document = document;
+        this.personType = personType;
+        this.address = address;
         this.active = true;
     }
 

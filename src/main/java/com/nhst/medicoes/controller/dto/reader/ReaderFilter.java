@@ -16,8 +16,8 @@ public class ReaderFilter {
                 .id(client.getId())
                 .name(client.getName())
                 .email(client.getEmail())
-                .cpf(client.getCpf())
-                .active(client.isActive())
+                .document(client.getDocument())
+                .personType(client.getPersonType())
                 .build();
     }
 }

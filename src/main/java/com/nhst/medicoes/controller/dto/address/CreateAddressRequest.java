@@ -29,8 +29,6 @@ public record CreateAddressRequest(
         String state,
 
         @Size(max = 9, message = "Zip code must have at most 9 characters")
-        String zipCode,
-
-        Long propertyId
+        String zipCode
 
 ) {}

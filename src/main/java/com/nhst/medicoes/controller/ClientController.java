@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,10 @@ public class ClientController {
 
     @PostMapping
     @PreAuthorize("hasRole('OPERATOR')")
-    public Client create(@RequestBody @Valid CreateClientRequest req) {
-        return service.create(req);
+    public ResponseEntity<ClientResponse> create(@RequestBody @Valid CreateClientRequest req) {
+        Client client = service.create(req);
+        ClientResponse response = ClientResponse.fromEntity(client);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

@@ -1,7 +1,7 @@
 package com.nhst.medicoes.controller.dto.client;
 
-
 import com.nhst.medicoes.domain.Client;
+import com.nhst.medicoes.domain.enums.PersonType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,16 +12,16 @@ public class ClientResponse {
     private Long id;
     private String name;
     private String email;
-    private String cpf;
-    private boolean active;
+    private String document;
+    private PersonType personType;
 
     public static ClientResponse fromEntity(Client client) {
         return ClientResponse.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .email(client.getEmail())
-                .cpf(client.getCpf())
-                .active(client.isActive())
+                .document(client.getDocument())
+                .personType(client.getPersonType())
                 .build();
     }
 }
