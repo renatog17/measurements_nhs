@@ -1,13 +1,12 @@
 package com.nhst.medicoes.service;
 
 import com.nhst.medicoes.domain.*;
-import com.nhst.medicoes.controller.dto.CreateInstallation;
+import com.nhst.medicoes.controller.dto.installation.CreateInstallation;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import com.nhst.medicoes.domain.enums.MeasurementSource;
 import com.nhst.medicoes.repository.InstallationRepository;
 import com.nhst.medicoes.repository.InvoiceRepository;
 import com.nhst.medicoes.repository.MeasurementRepository;
-import com.nhst.medicoes.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ public class InstallationService {
     private final MeterService meterService;
     private final InstallationRepository installationRepository;
     private final InvoiceRepository invoiceRepository;
-    private final ReaderRepository readerRepository;
+    private final ReaderService readerService;
     private final MeasurementRepository measurementRepository;
 
     //antes de desativar uma installação, é necessário fazer a leitura final
@@ -45,7 +44,7 @@ public class InstallationService {
 
     //ao fazer uma nova instalação, é necessário fazer a leitura inicial após
     @Transactional
-    public void createInstallation(CreateInstallation req) {
+    public Installation createInstallation(CreateInstallation req) {
 
         if(installationRepository.existsByPropertyIdAndMeterIdAndClientIdAndActiveTrue(req.propertyId(), req.meterId(), req.clientId())){
             throw new IllegalStateException("This installation already exists.");
@@ -65,31 +64,31 @@ public class InstallationService {
         if(req.meterId() !=null){
             Meter meter = meterService.findById(req.meterId());
             installation.setMeter(meter);
-            Reader reader = readerRepository.findById(req.readerId()).get();
+            Reader reader = readerService.findById(req.readerId());
 
             Invoice invoice = new Invoice();
-            invoice.setInstallation(installation);;
-            invoice.setCreatedAt(LocalDateTime.now());
-            invoice.setStatus(InvoiceStatus.CLOSED);
-            invoice.setTotalConsumedVolume(req.volumeAtAssigned());
-            invoice.setReferenceMonth(LocalDate.now());
-            invoice.setClosedAt(LocalDateTime.now());
-            invoice.setPricePerM3(BigDecimal.ZERO);
+                invoice.setInstallation(installation);;
+                invoice.setCreatedAt(LocalDateTime.now());
+                invoice.setStatus(InvoiceStatus.CLOSED);
+                invoice.setTotalConsumedVolume(req.volumeAtAssigned());
+                invoice.setReferenceMonth(LocalDate.now());
+                invoice.setClosedAt(LocalDateTime.now());
+                invoice.setPricePerM3(BigDecimal.ZERO);
 
             invoiceRepository.saveAndFlush(invoice);
 
             installation.setVolumeAtAssigned(req.volumeAtAssigned());
             Measurement measurement = new Measurement();
-            measurement.setInvoice(invoice);
-            measurement.setReader(reader);
-            measurement.setConsumedVolume(req.volumeAtAssigned());
-            measurement.setSource(MeasurementSource.INITIALIZATION);
-            measurement.setMeasuredAt(LocalDateTime.now());
-            measurement.setCreatedAt(LocalDateTime.now());
+                measurement.setInvoice(invoice);
+                measurement.setReader(reader);
+                measurement.setConsumedVolume(req.volumeAtAssigned());
+                measurement.setSource(MeasurementSource.INITIALIZATION);
+                measurement.setMeasuredAt(LocalDateTime.now());
+                measurement.setCreatedAt(LocalDateTime.now());
 
             measurementRepository.save(measurement);
         }
 
-
+        return installation;
     }
 }

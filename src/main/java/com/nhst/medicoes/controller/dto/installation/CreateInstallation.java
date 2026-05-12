@@ -1,4 +1,4 @@
-package com.nhst.medicoes.controller.dto;
+package com.nhst.medicoes.controller.dto.installation;
 
 import java.math.BigDecimal;
 

@@ -1,10 +1,15 @@
 package com.nhst.medicoes.controller;
 
-import com.nhst.medicoes.controller.dto.CreateInstallation;
+import com.nhst.medicoes.controller.dto.installation.CreateInstallation;
+import com.nhst.medicoes.controller.dto.installation.InstallationResponse;
+import com.nhst.medicoes.domain.Installation;
 import com.nhst.medicoes.service.InstallationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RestController
@@ -15,9 +20,13 @@ public class InstallationController {
 
     @PostMapping("")
     @PreAuthorize("hasRole('OPERATOR')")
-    public void assign(@RequestBody CreateInstallation req) {
+    public ResponseEntity<InstallationResponse> assign(@RequestBody CreateInstallation req) {
 
-        installationService.createInstallation(req);
+        Installation installation = installationService.createInstallation(req);
+        InstallationResponse response = InstallationResponse.fromEntity(installation);
+        return ResponseEntity
+                .created(URI.create("/installation/" + response.getId()))
+                .body(response);
     }
 
     @PostMapping("/disable/{serialNumber}")

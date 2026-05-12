@@ -35,7 +35,8 @@ public class ReaderService {
     }
 
     public Reader findById(Long readerId) {
-        return readerRepository.findById(readerId).orElseThrow();
+        return readerRepository.findById(readerId)
+                .orElseThrow(() -> new IllegalStateException("Reader not found"));
     }
 
     public Page<ReaderResponse> findAll(ReaderFilter filter, Pageable pageable){
