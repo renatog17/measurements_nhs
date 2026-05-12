@@ -18,7 +18,6 @@ public class PropertyResponse {
 
         return PropertyResponse.builder()
                 .id(property.getId())
-                .city(property.getCity())
                 .identifierCode(property.getIdentifierCode())
                 .active(property.isActive())
                 .parentPropertyId(

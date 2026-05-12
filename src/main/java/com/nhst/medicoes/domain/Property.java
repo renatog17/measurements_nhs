@@ -20,9 +20,9 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String address;
-
-    private String city;
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @Column(unique = true)
     private String identifierCode;
@@ -31,6 +31,7 @@ public class Property {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String name;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Installation> meterProperties = new ArrayList<>();
@@ -45,9 +46,9 @@ public class Property {
     @OneToMany(mappedBy = "parentProperty")
     private List<Property> childProperties = new ArrayList<>();
 
-    public Property(String address, String city, String identifierCode) {
+    public Property(Address address, String identifierCode, String name) {
         this.address = address;
-        this.city = city;
+        this.name = name;
         this.identifierCode = identifierCode;
         this.active = true;
     }

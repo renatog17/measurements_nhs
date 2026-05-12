@@ -18,17 +18,6 @@ public class PropertySpecification {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            if (filter.getCity() != null
-                    && !filter.getCity().isBlank()) {
-
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("city")),
-                                "%" + filter.getCity().toLowerCase() + "%"
-                        )
-                );
-            }
-
             if (filter.getIdentifierCode() != null
                     && !filter.getIdentifierCode().isBlank()) {
 

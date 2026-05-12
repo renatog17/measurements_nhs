@@ -24,10 +24,10 @@ public class PropertyController {
     @PreAuthorize("hasRole('OPERATOR')")
     public Property create(@RequestBody @Valid CreatePropertyRequest req) {
         return propertyService.create(
-                req.address(),
-                req.city(),
                 req.identifierCode(),
-                req.parentPropertyId()
+                req.addressRequest(),
+                req.parentPropertyId(),
+                req.name()
         );
     }
 
@@ -35,7 +35,7 @@ public class PropertyController {
     @PreAuthorize("hasRole('OPERATOR')")
     public Page<PropertyResponse> findAll(
             PropertyFilter filter,
-            @PageableDefault(size = 10, sort = "city")
+            @PageableDefault(size = 10)
             Pageable pageable
     ) {
 
