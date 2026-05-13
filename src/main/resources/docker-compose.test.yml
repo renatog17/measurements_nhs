@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  postgres-test:
+    image: postgres:16
+    container_name: medicoes-postgres-test
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: medicoes_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+
+    ports:
+      - "5433:5432"
+
+    tmpfs:
+      - /var/lib/postgresql/data
