@@ -29,8 +29,10 @@ public class InstallationResponse {
 
         return InstallationResponse.builder()
                 .id(installation.getId())
+
                 .clientId(installation.getClient().getId())
                 .clientName(installation.getClient().getName())
+
                 .propertyId(installation.getProperty().getId())
                 .propertyIdentifierCode(
                         installation.getProperty().getIdentifierCode()
@@ -38,16 +40,27 @@ public class InstallationResponse {
                 .propertyName(
                         installation.getProperty().getName()
                 )
-                .meterId(installation.getMeter().getId())
-                .meterSerialNumber(
-                        installation.getMeter().getSerialNumber()
+
+                .meterId(
+                        installation.getMeter() != null
+                                ? installation.getMeter().getId()
+                                : null
                 )
+                .meterSerialNumber(
+                        installation.getMeter() != null
+                                ? installation.getMeter().getSerialNumber()
+                                : null
+                )
+
                 .active(installation.isActive())
+
                 .assignedAt(installation.getAssignedAt())
                 .unassignedAt(installation.getUnassignedAt())
+
                 .volumeAtAssigned(
                         installation.getVolumeAtAssigned()
                 )
+
                 .build();
     }
 }

@@ -12,8 +12,8 @@ public class BankSlipSettlementJob {
     private final BankSlipSettlementService service;
 
     //@Scheduled(cron = "0 */10 * * * *")
-//    @Scheduled(fixedRate = 10000)
-//    public void execute() {
-//        service.syncPayments();
-//    }
+    @Scheduled(fixedRate = 10000)
+    public void execute() {
+        service.syncPayments();
+    }
 }

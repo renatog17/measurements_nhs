@@ -37,7 +37,10 @@ public class MeasurementService {
 
     @Transactional
     public void createMeasurement(LocalDateTime measuredAt, String serialNumber, BigDecimal value, Long readerId) throws Exception {
+        System.out.println(serialNumber);
         Meter meter = meterService.findBySerialNumber(serialNumber);
+        System.out.println("depois da consulta do meter");
+
         Installation installation = installationRepository.findByMeterAndActiveTrue(meter)
                 .orElseThrow(() -> new IllegalStateException("Não foi encontrada instalação ativa para este medidor."));
         Reader reader = readerService.findById(readerId);

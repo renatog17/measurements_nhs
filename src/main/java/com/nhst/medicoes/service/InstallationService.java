@@ -45,16 +45,12 @@ public class InstallationService {
     //ao fazer uma nova instalação, é necessário fazer a leitura inicial após
     @Transactional
     public Installation createInstallation(CreateInstallation req) {
-
         if(installationRepository.existsByPropertyIdAndMeterIdAndClientIdAndActiveTrue(req.propertyId(), req.meterId(), req.clientId())){
             throw new IllegalStateException("This installation already exists.");
         }
-
         Installation installation = new Installation();
-
         Client client = clientService.findById(req.clientId());
         Property property = propertyService.findById(req.propertyId());
-
         installation.setProperty(property);
         installation.setClient(client);
         installation.setAssignedAt(LocalDateTime.now());
@@ -88,7 +84,6 @@ public class InstallationService {
 
             measurementRepository.save(measurement);
         }
-
         return installation;
     }
 }
