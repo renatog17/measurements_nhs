@@ -26,7 +26,7 @@ public class MeterController {
     @PostMapping
     @PreAuthorize("hasRole('OPERATOR')")
     public ResponseEntity<MeterResponse> create(@RequestBody @Valid CreateMeterRequest req) {
-        Meter meter = meterService.create(req.serialNumber(), req.maxVolume(), req.actualVolume());
+        Meter meter = meterService.create(req.serialNumber(), req.maxVolume());
         MeterResponse response = MeterResponse.fromEntity(meter);
         return ResponseEntity
                 .created(URI.create("/meter/" + response.getId()))

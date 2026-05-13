@@ -35,7 +35,7 @@ public class Installation {
 
     private LocalDateTime unassignedAt;
 
-    private BigDecimal volumeAtAssigned;
+   // private BigDecimal volumeAtAssigned;
 
     @PrePersist
     void onCreate() {

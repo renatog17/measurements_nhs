@@ -24,8 +24,8 @@ public class Meter {
     @Column(name = "serial_number", unique = true, nullable = false, length = 120)
     private String serialNumber;
 
-    @Column(name = "actual_volume", nullable = false, precision = 12, scale = 3)
-    private BigDecimal actualVolume;
+//    @Column(name = "actual_volume", nullable = false, precision = 12, scale = 3)
+//    private BigDecimal actualVolume;
 
     @Column(name = "max_volume", nullable = false, precision = 12, scale = 3)
     private BigDecimal maxVolume;

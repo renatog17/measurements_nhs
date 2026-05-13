@@ -4,7 +4,6 @@ CREATE TABLE installations (
     property_id BIGINT NOT NULL,
     meter_id BIGINT,
     active BOOLEAN NOT NULL DEFAULT TRUE,
-    volume_at_assigned NUMERIC(12,3),
     assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     unassigned_at TIMESTAMP,
 

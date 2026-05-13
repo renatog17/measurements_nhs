@@ -14,8 +14,6 @@ public class MeterResponse {
 
     private String serialNumber;
 
-    private BigDecimal actualVolume;
-
     private BigDecimal maxVolume;
 
     private Integer reset;
@@ -27,7 +25,6 @@ public class MeterResponse {
         return MeterResponse.builder()
                 .id(meter.getId())
                 .serialNumber(meter.getSerialNumber())
-                .actualVolume(meter.getActualVolume())
                 .maxVolume(meter.getMaxVolume())
                 .reset(meter.getReset())
                 .active(meter.isActive())

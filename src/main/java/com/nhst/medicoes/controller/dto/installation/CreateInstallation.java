@@ -6,7 +6,7 @@ public record CreateInstallation(
         Long meterId,
         Long clientId,
         Long propertyId,
-        BigDecimal volumeAtAssigned,
-        Long readerId
+        Long readerId,
+        BigDecimal volumeAtInstallation
 ) {
 }

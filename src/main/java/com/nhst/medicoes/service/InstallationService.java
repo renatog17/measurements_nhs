@@ -66,21 +66,19 @@ public class InstallationService {
                 invoice.setInstallation(installation);;
                 invoice.setCreatedAt(LocalDateTime.now());
                 invoice.setStatus(InvoiceStatus.CLOSED);
-                invoice.setTotalConsumedVolume(req.volumeAtAssigned());
                 invoice.setReferenceMonth(LocalDate.now());
                 invoice.setClosedAt(LocalDateTime.now());
                 invoice.setPricePerM3(BigDecimal.ZERO);
-
+                invoice.setTotalConsumedVolume(req.volumeAtInstallation());
             invoiceRepository.saveAndFlush(invoice);
 
-            installation.setVolumeAtAssigned(req.volumeAtAssigned());
             Measurement measurement = new Measurement();
                 measurement.setInvoice(invoice);
                 measurement.setReader(reader);
-                measurement.setConsumedVolume(req.volumeAtAssigned());
                 measurement.setSource(MeasurementSource.INITIALIZATION);
                 measurement.setMeasuredAt(LocalDateTime.now());
                 measurement.setCreatedAt(LocalDateTime.now());
+                measurement.setConsumedVolume(req.volumeAtInstallation());
 
             measurementRepository.save(measurement);
         }

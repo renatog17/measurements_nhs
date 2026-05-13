@@ -23,8 +23,6 @@ public class InstallationResponse {
     private boolean active;
     private LocalDateTime assignedAt;
     private LocalDateTime unassignedAt;
-    private BigDecimal volumeAtAssigned;
-
     public static InstallationResponse fromEntity(Installation installation) {
 
         return InstallationResponse.builder()
@@ -56,10 +54,6 @@ public class InstallationResponse {
 
                 .assignedAt(installation.getAssignedAt())
                 .unassignedAt(installation.getUnassignedAt())
-
-                .volumeAtAssigned(
-                        installation.getVolumeAtAssigned()
-                )
 
                 .build();
     }

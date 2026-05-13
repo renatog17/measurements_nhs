@@ -19,7 +19,7 @@ public class MeterService {
 
     private final MeterRepository meterRepository;
 
-    public Meter create(String serialNumber, BigDecimal maxVolume, BigDecimal actualVolume) {
+    public Meter create(String serialNumber, BigDecimal maxVolume) {
         if (meterRepository.findBySerialNumber(serialNumber).isPresent()) {
             throw new IllegalStateException("Meter already exists");
         }
@@ -27,7 +27,6 @@ public class MeterService {
                 Meter.builder()
                         .serialNumber(serialNumber)
                         .maxVolume(maxVolume)
-                        .actualVolume(actualVolume)
                         .build()
         );
     }
