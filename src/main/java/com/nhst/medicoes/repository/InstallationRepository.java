@@ -8,7 +8,10 @@ import java.util.Optional;
 
 public interface InstallationRepository extends JpaRepository<Installation, Long> {
 
-    boolean existsByPropertyIdAndMeterIdAndClientIdAndActiveTrue(Long propertyId, Long meterId, Long clientId);
+    boolean existsByMeterIdAndActiveTrue(Long meterId);
+
+    boolean existsByPropertyIdAndActiveTrue(Long propertyId);
+
     Optional<Installation> findFirstByPropertyIdAndActiveTrueOrderByAssignedAtDesc(Long propertyId);
 
     Optional<Installation> findByMeterAndActiveTrue(Meter meter);

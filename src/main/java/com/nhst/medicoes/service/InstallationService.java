@@ -45,8 +45,11 @@ public class InstallationService {
     //ao fazer uma nova instalação, é necessário fazer a leitura inicial após
     @Transactional
     public Installation createInstallation(CreateInstallation req) {
-        if(installationRepository.existsByPropertyIdAndMeterIdAndClientIdAndActiveTrue(req.propertyId(), req.meterId(), req.clientId())){
-            throw new IllegalStateException("This installation already exists.");
+        if(installationRepository.existsByMeterIdAndActiveTrue(req.meterId())){
+            throw new IllegalStateException("Esse medidor já está em uma outra instalação");
+        }
+        if(installationRepository.existsByPropertyIdAndActiveTrue(req.propertyId())){
+            throw new IllegalStateException("Essa propriedade já está em uma outra instalação");
         }
         Installation installation = new Installation();
         Client client = clientService.findById(req.clientId());

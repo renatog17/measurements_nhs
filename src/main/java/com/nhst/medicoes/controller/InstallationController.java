@@ -4,6 +4,7 @@ import com.nhst.medicoes.controller.dto.installation.CreateInstallation;
 import com.nhst.medicoes.controller.dto.installation.InstallationResponse;
 import com.nhst.medicoes.domain.Installation;
 import com.nhst.medicoes.service.InstallationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,7 @@ public class InstallationController {
 
     @PostMapping("")
     @PreAuthorize("hasRole('OPERATOR')")
-    public ResponseEntity<InstallationResponse> assign(@RequestBody CreateInstallation req) {
+    public ResponseEntity<InstallationResponse> assign(@Valid @RequestBody CreateInstallation req) {
 
         Installation installation = installationService.createInstallation(req);
         InstallationResponse response = InstallationResponse.fromEntity(installation);
