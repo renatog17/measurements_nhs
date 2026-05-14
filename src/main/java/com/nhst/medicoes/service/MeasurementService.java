@@ -37,10 +37,12 @@ public class MeasurementService {
 
     @Transactional
     public void createMeasurement(LocalDateTime measuredAt, String serialNumber, BigDecimal value, Long readerId) throws Exception {
+
         Meter meter = meterService.findBySerialNumber(serialNumber);
 
         Installation installation = installationRepository.findByMeterAndActiveTrue(meter)
                 .orElseThrow(() -> new IllegalStateException("Não foi encontrada instalação ativa para este medidor."));
+
         Reader reader = readerService.findById(readerId);
 
         Measurement measurement = new Measurement();
@@ -67,29 +69,32 @@ public class MeasurementService {
                 );
 
         measurement.setInvoice(invoice);
+        invoice.getMeasurements().add(measurement);
 
-        //verificar se já pode fechar o invoice
+        invoiceRepository.saveAndFlush(invoice);
+        measurementRepository.saveAndFlush(measurement);
+
+
         Invoice invoiceLastClosed = invoiceRepository.findFirstByInstallationAndStatusClosedOrderByClosedAtDesc(installation.getId())
                 .orElseThrow(() -> new IllegalStateException("Não foi feita a leitura inicial para esta instalação"));
+
         BigDecimal consumoAtual = invoice.getTotalConsumedVolume();
         BigDecimal consumoAnterior = invoiceLastClosed.getTotalConsumedVolume();
 
         BigDecimal diferenca = consumoAtual.subtract(consumoAnterior);
 
         if (diferenca.compareTo(minimumConsumptionM3) > 0
-        ||
-        invoice.getMeasurements().size() >= 3
-        ) {
+                || invoice.getMeasurements().size() >= 3) {
+
             invoice.setStatus(InvoiceStatus.CLOSED);
             invoice.setClosedAt(LocalDateTime.now());
 
-
-            BigDecimal diff = invoice.getTotalConsumedVolume().subtract(invoiceLastClosed.getTotalConsumedVolume());
+            BigDecimal diff = consumoAtual.subtract(consumoAnterior);
 
             invoice.setTotalAmountDue(pricePerM3.multiply(diff));
             invoice.setVolumeDifference(diff);
         }
+
         invoiceRepository.saveAndFlush(invoice);
-        measurementRepository.save(measurement);
     }
 }
