@@ -60,12 +60,7 @@ public class Property {
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
         updatedAt = createdAt;
     }
 
-    @PreUpdate
-    void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

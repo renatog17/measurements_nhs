@@ -1,5 +1,6 @@
 package com.nhst.medicoes.service;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.domain.*;
 import com.nhst.medicoes.controller.dto.installation.CreateInstallation;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InstallationService {
 
+    private final AppTime appTime;
     private final ClientService clientService;
     private final PropertyService propertyService;
     private final MeterService meterService;
@@ -38,7 +40,7 @@ public class InstallationService {
             Installation installation = optionalInstallation.get();
             installation.setActive(false);
             Optional<Invoice> optionalInvoice = invoiceRepository.findByInstallationAndStatusOpen(installation);
-            optionalInvoice.ifPresent(Invoice::closeInvoice);
+            optionalInvoice.ifPresent(invoice -> invoice.closeInvoice(appTime.nowDateTime()));
         }
     }
 
@@ -56,7 +58,7 @@ public class InstallationService {
         Property property = propertyService.findById(req.propertyId());
         installation.setProperty(property);
         installation.setClient(client);
-        installation.setAssignedAt(LocalDateTime.now());
+        installation.setAssignedAt(appTime.nowDateTime());
 
         installationRepository.saveAndFlush(installation);
 
@@ -69,8 +71,8 @@ public class InstallationService {
                 invoice.setInstallation(installation);;
                 invoice.setCreatedAt(LocalDateTime.now());
                 invoice.setStatus(InvoiceStatus.CLOSED);
-                invoice.setReferenceMonth(LocalDate.now());
-                invoice.setClosedAt(LocalDateTime.now());
+                invoice.setReferenceMonth(appTime.nowDate());
+                invoice.setClosedAt(appTime.nowDateTime());
                 invoice.setPricePerM3(BigDecimal.ZERO);
                 invoice.setTotalConsumedVolume(req.volumeAtInstallation());
             invoiceRepository.saveAndFlush(invoice);
@@ -79,8 +81,8 @@ public class InstallationService {
                 measurement.setInvoice(invoice);
                 measurement.setReader(reader);
                 measurement.setSource(MeasurementSource.INITIALIZATION);
-                measurement.setMeasuredAt(LocalDateTime.now());
-                measurement.setCreatedAt(LocalDateTime.now());
+                measurement.setMeasuredAt(appTime.nowDateTime());
+                measurement.setCreatedAt(appTime.nowDateTime());
                 measurement.setConsumedVolume(req.volumeAtInstallation());
 
             measurementRepository.save(measurement);

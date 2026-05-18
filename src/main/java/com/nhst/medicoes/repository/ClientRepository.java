@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ClientRepository extends JpaRepository<Client, Long>,
         JpaSpecificationExecutor<Client> {
-
-    boolean existsByDocument(String document);
-    boolean existsByEmail(String email);
+    boolean existsByDocumentOrEmail(String document, String email);
 
 }

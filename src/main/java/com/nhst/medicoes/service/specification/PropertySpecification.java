@@ -1,4 +1,4 @@
-package com.nhst.medicoes.service;
+package com.nhst.medicoes.service.specification;
 
 import com.nhst.medicoes.controller.dto.property.PropertyFilter;
 import com.nhst.medicoes.domain.Property;

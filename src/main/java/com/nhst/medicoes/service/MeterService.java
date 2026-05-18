@@ -1,9 +1,11 @@
 package com.nhst.medicoes.service;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.controller.dto.meter.MeterFilter;
 import com.nhst.medicoes.controller.dto.meter.MeterResponse;
 import com.nhst.medicoes.domain.Meter;
 import com.nhst.medicoes.repository.MeterRepository;
+import com.nhst.medicoes.service.specification.MeterSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 @Transactional
 public class MeterService {
 
+    private final AppTime appTime;
     private final MeterRepository meterRepository;
 
     public Meter create(String serialNumber, BigDecimal maxVolume) {
@@ -27,6 +30,8 @@ public class MeterService {
                 Meter.builder()
                         .serialNumber(serialNumber)
                         .maxVolume(maxVolume)
+                        .createdAt(appTime.nowDateTime())
+                        .updatedAt(appTime.nowDateTime())
                         .build()
         );
     }

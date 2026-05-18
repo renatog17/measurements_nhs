@@ -1,10 +1,12 @@
 package com.nhst.medicoes.service;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.controller.dto.reader.ReaderFilter;
 import com.nhst.medicoes.controller.dto.reader.ReaderResponse;
 import com.nhst.medicoes.domain.Reader;
 import com.nhst.medicoes.controller.dto.reader.CreateReaderRequest;
 import com.nhst.medicoes.repository.ReaderRepository;
+import com.nhst.medicoes.service.specification.ReaderSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReaderService {
 
+    private final AppTime appTime;
     private final ReaderRepository readerRepository;
 
     @Transactional
@@ -27,6 +30,7 @@ public class ReaderService {
         Reader reader = Reader.builder()
                 .name(request.name())
                 .employeeCode(request.employeeCode())
+                .createdAt(appTime.nowDateTime())
                 .build();
 
         Reader saved = readerRepository.save(reader);

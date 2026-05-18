@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.domain.enums.MeasurementSource;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,11 +39,4 @@ public class Measurement {
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
-
-
-
-    @PrePersist
-    void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 }

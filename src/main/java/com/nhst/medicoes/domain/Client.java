@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.domain.enums.PersonType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "clients")
 public class Client {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,12 +56,6 @@ public class Client {
         this.personType = personType;
         this.address = address;
         this.active = true;
-    }
-
-    @PrePersist
-    void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
     }
 
     @PreUpdate

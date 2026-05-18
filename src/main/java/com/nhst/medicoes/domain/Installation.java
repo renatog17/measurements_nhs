@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.clock.AppTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,13 +38,8 @@ public class Installation {
 
    // private BigDecimal volumeAtAssigned;
 
-    @PrePersist
-    void onCreate() {
-        assignedAt = LocalDateTime.now();
-    }
-
-    public void deactivate() {
+    public void deactivate(LocalDateTime time) {
         this.active = false;
-        this.unassignedAt = LocalDateTime.now();
+        this.unassignedAt = time;
     }
 }

@@ -29,8 +29,4 @@ public class Reader {
 
     private LocalDateTime createdAt;
 
-    @PrePersist
-    void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 }

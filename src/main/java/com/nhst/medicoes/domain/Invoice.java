@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.domain.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,7 +38,7 @@ public class Invoice {
     private InvoiceStatus status = InvoiceStatus.OPEN;
 
     private LocalDateTime closedAt;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     private BigDecimal volumeDifference;
     private BigDecimal totalAmountDue;
     @ManyToOne
@@ -48,8 +49,8 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BankSlip> bankSlips = new ArrayList<>();
 
-    public void closeInvoice(){
+    public void closeInvoice(LocalDateTime dateTime){
         this.status = InvoiceStatus.CLOSED;
-        this.setClosedAt(LocalDateTime.now());
+        this.closedAt = dateTime;
     }
 }

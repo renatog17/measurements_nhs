@@ -1,5 +1,6 @@
 package com.nhst.medicoes.service;
 
+import com.nhst.medicoes.clock.AppTime;
 import com.nhst.medicoes.controller.dto.address.CreateAddressRequest;
 import com.nhst.medicoes.controller.dto.property.PropertyFilter;
 import com.nhst.medicoes.controller.dto.property.PropertyResponse;
@@ -8,17 +9,17 @@ import com.nhst.medicoes.domain.Property;
 import com.nhst.medicoes.domain.enums.PropertyType;
 import com.nhst.medicoes.repository.AddressRepository;
 import com.nhst.medicoes.repository.PropertyRepository;
+import com.nhst.medicoes.service.specification.PropertySpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class PropertyService {
 
+    private final AppTime appTime;
     private final PropertyRepository propertyRepository;
     private final AddressRepository addressRepository;
 
@@ -52,6 +53,7 @@ public class PropertyService {
                 .identifierCode(generatedCode)
                 .name(name)
                 .type(propertyType)
+                .createdAt(appTime.nowDateTime())
                 .build();
 
         if (parentPropertyId != null) {

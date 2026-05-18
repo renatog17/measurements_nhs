@@ -12,6 +12,8 @@ public interface InstallationRepository extends JpaRepository<Installation, Long
 
     boolean existsByPropertyIdAndActiveTrue(Long propertyId);
 
+    Optional<Installation> findByMeter_SerialNumberAndActiveTrue(String serialNumber);
+
     Optional<Installation> findFirstByPropertyIdAndActiveTrueOrderByAssignedAtDesc(Long propertyId);
 
     Optional<Installation> findByMeterAndActiveTrue(Meter meter);

@@ -1,5 +1,6 @@
 package com.nhst.medicoes.domain;
 
+import com.nhst.medicoes.clock.AppTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,12 +50,7 @@ public class Meter {
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
         updatedAt = createdAt;
     }
 
-    @PreUpdate
-    void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }
